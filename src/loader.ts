@@ -88,7 +88,10 @@ materials.aureole = new MeshStandardMaterial({
 });
 
 materials.gate = new MeshStandardMaterial({
-	//a definir
+	map: map,
+
+	color: "#F09684", // Remplacez 0xRRGGBB par la valeur hexadécimale de la couleur souhaitée
+    roughness: 0,
 });
 
 const fontStandardMaterial = new MeshStandardMaterial({ color: 0xffffff });
@@ -465,7 +468,6 @@ export default async function Loader(): Promise<ThreeModels> {
 				else if (objectsName == 'rockC') { objects.rockC = n }
 				else if (objectsName == 'rockD') { objects.RockD = n }
 				else if (objectsName == 'dragonBroken') { objects.dragonBroken = n }
-				// else if (objectsName == 'dragonUnbroken') { objects.dragonUnBroken = n }
 				else if (objectsName == 'gate') { objects.gate = n }
 			})
 		}
