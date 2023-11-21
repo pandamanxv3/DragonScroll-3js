@@ -62,7 +62,16 @@ export default class SceneB {
 		this.animationFuncs = [
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					this.scene.remove(models.cube);
+					this.scene.remove(
+						this.hemisphereLight,
+						models.dragonSphere,
+						models.gate,
+						models.aureole[0],
+						models.aureole[1],
+						models.aureole[2],
+						models.water[0],
+						models.cube
+						);
 					this.reset();
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
