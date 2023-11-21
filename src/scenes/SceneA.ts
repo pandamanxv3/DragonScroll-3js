@@ -13,8 +13,8 @@ export default class SceneA {
 	private models: ThreeModels;
 	private renderer: WebGLRenderer;
 
-	constructor(models: ThreeModels, renderer: WebGLRenderer, gui: GUI) {// TMP - Debug
-		this.ambientLight = new AmbientLight(0xfff0dd, 0.1);
+	constructor(models: ThreeModels, renderer: WebGLRenderer, gui: GUI) {  // TMP - Debug
+		this.ambientLight = new AmbientLight(0xfff0dd, 0.5);
 		this.hemisphereLight = new HemisphereLight(0xebdab7, 0x39305c, 0.8);
 		this.scene = new Scene;
 		this.animations = initAnimationsA();
