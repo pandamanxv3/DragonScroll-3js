@@ -1,4 +1,4 @@
-import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, Vector3, Color, Clock, WebGLRenderer, ShaderMaterial } from 'three'
+import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, Vector3, Color, Clock, WebGLRenderer, ShaderMaterial, HemisphereLight } from 'three'
 import { AnimationFunctionB, ThreeModels, Transition } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 import initAnimationsB from '../animations/animationB'
@@ -8,6 +8,7 @@ export default class SceneB {
 
 	private clock: Clock;
 	private ambientLight: AmbientLight;
+	private hemisphereLight: HemisphereLight;
 	private reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[];
 	private scene: Scene;
 	private animations: AnimationFunctionB;
@@ -28,7 +29,8 @@ export default class SceneB {
 		const cameraListener = (event: MouseEvent) => this.animations.cameraAnimation(event, models.camera[1]);
 
 		this.clock = new Clock;
-		this.ambientLight = new AmbientLight(0xffffff, 0.5);
+		this.ambientLight = new AmbientLight(0xfff0dd, 0.5);
+		this.hemisphereLight = new HemisphereLight(0xebdab7, 0x39305c, 0.1);
 		this.reactAreaLights = [];
 		for (let i = 0; i < 9; i++) {
 			const light = new RectAreaLight('black', 0.0, 85, 85);
@@ -52,7 +54,7 @@ export default class SceneB {
 					this.parameters.index = 0;
 					this.parameters.oldTime = 0;
 					this.parameters.nextAnimation = 5;
-					// transition.sceneToScene();
+					transition.sceneToScene();
 				}
 			}
 		}
@@ -145,6 +147,7 @@ export default class SceneB {
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					this.scene.add(
 						this.ambientLight,
+						this.hemisphereLight,
 						models.gate,
 						models.dragonUnBrokenNoSphere,
 						models.dragonSphere,
@@ -152,13 +155,13 @@ export default class SceneB {
 						models.aureole[1],
 						models.aureole[2],
 						models.water[0],
-						// this.ambientLight,
-						// this.hemisphereLight,
 					);
 					this.parameters.oldTime = this.clock.getElapsedTime();
 					this.parameters.isOldTimeSet = true;
 				}
-				this.animations.resetAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, models);
+				if (!this.animations.resetAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.scene, this.hemisphereLight, models)) {
+					this.parameters.next();
+				}
 			}
 		]
 		this.models = models;
@@ -167,8 +170,8 @@ export default class SceneB {
 	}
 
 	public reset() {
-		this.ambientLight.color = new Color(0xffffff);
 		this.ambientLight.intensity = 0.5;
+		this.hemisphereLight.intensity = 0.1;
 		const positionLight = [
 			new Vector3(-150, 100, 0),
 			new Vector3(-200, 150, -150),
@@ -197,6 +200,7 @@ export default class SceneB {
 			helper.visible = true;
 		});
 		this.scene.background = new Color("black");
+		this.models.backgroundTexture
 
 		/* - Camera - */
 		this.models.camera[1].lookAt(0, 0, 0);

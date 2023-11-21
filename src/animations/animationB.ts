@@ -515,43 +515,19 @@ export default function initAnimationsB(): AnimationFunctionB {
 				camera.lookAt(0, 0, 0);
 			}
 		},
-		resetAnimation: (time, setAnime, models) => {
+		resetAnimation: (time, setAnime, scene, light, models) => {
 			if (!setAnime[0]) {
 				models.dragonUnBrokenNoSphere.position.set(-4.75, -0.58, -0.53);
 				models.dragonUnBrokenNoSphere.rotation.set(-0.711, -0.64, 0.010);
 				models.dragonUnBrokenNoSphere.scale.set(2, 2, 2);
 				models.dragonUnBrokenNoSphere.visible = true;
 				models.water[0].rotation.x = -Math.PI / 2;
-				models.water[0].position.y = -6;
-				// const position = new Vector3(0, 0, 0);
+				models.water[0].position.y = -50;
 
-				// position.set(-0.39, 2.1, -1.42);
-				// models.gate.position.copy(position.applyMatrix4(models.camera[0].matrixWorldInverse).applyMatrix4(models.camera[1].matrixWorld));
-				// models.gate.scale.set(0.734, 1, 0.623);
-
-				// position.set(0, 0, -25);
-				// models.aureole[0].position.copy(position.applyMatrix4(models.camera[0].matrixWorldInverse).applyMatrix4(models.camera[1].matrixWorld));
-				// models.aureole[0].rotation.set(0, 0, 0);
-				// models.aureole[0].scale.set(10, 10, 7);
-				// position.set(0, 0, -25);
-				// models.aureole[1].position.copy(position.applyMatrix4(models.camera[0].matrixWorldInverse).applyMatrix4(models.camera[1].matrixWorld));
-				// models.aureole[1].rotation.set(0, 0, 0);
-				// models.aureole[1].scale.set(12, 12, 7);
-				// position.set(0, 0, -25);
-				// models.aureole[2].position.copy(position.applyMatrix4(models.camera[0].matrixWorldInverse).applyMatrix4(models.camera[1].matrixWorld));
-				// models.aureole[2].rotation.set(0, 0, 0);
-				// models.aureole[2].scale.set(15, 15, 7);
-
-				// position.set(-4.75, -0.58, -0.53);
-				// models.dragonUnBrokenNoSphere.position.copy(position.applyMatrix4(models.camera[0].matrixWorldInverse).applyMatrix4(models.camera[1].matrixWorld));
-				// models.dragonUnBrokenNoSphere.rotation.set(-0.711, -0.64, 0.010);
-				// models.dragonUnBrokenNoSphere.scale.set(2, 2, 2);
-				// models.camera[0].modelViewMatrix
-				// console.log('ici')
 				models.dragonParticles.position.copy(models.cube.position);
 				setAnime[0] = true;
 			}
-			// if (time < 6) {
+			if (time < 20) {
 				models.camera[1].position.set(
 					MathUtils.lerp(models.camera[1].position.x, -11.668095624446837, 0.01),
 					MathUtils.lerp(models.camera[1].position.y, 7.0791641969833075, 0.01),
@@ -570,12 +546,15 @@ export default function initAnimationsB(): AnimationFunctionB {
 				models.camera[1].lookAt(models.dragonParticles.position);
 				models.cube.lookAt(models.camera[1].position);
 
-				if (time > 15) {
-					models.water[0].position.y = MathUtils.lerp(models.water[0].position.y, -38, 0.01),
-					console.log(models.water[0].position);
+				if (time > 4.5) {
+					scene.background = models.backgroundTexture;
+					light.intensity = MathUtils.lerp(light.intensity, 0.8, 0.01);
+					models.water[0].position.y = MathUtils.lerp(models.water[0].position.y, -6, 0.01);
 					models.water[0].material.uniforms['time'].value = time / 2;
 				}
-			// }
+				return true;
+			}
+			return false;
 		}
 	};
 }

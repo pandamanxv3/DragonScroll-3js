@@ -1,4 +1,4 @@
-import { AmbientLight, Group, Mesh, PerspectiveCamera, Points, RectAreaLight, Scene, Texture, WebGLRenderer } from 'three'
+import { AmbientLight, Group, HemisphereLight, Mesh, PerspectiveCamera, Points, RectAreaLight, Scene, Texture, WebGLRenderer } from 'three'
 import { Water } from 'three/examples/jsm/objects/Water.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import { Tween } from 'three/examples/jsm/libs/tween.module'
@@ -11,7 +11,7 @@ export type AnimationFunctionB = {
 	cameraFlashAnimation: (time: number, setCam: boolean[], models: ThreeModels, funcListener: (event: MouseEvent) => void) => boolean,
 	galaxyAnimation: (time: number, setAnime: boolean[], reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[], models: ThreeModels, scene: Scene) => boolean,
 	cameraGalaxyAnimation: (time: number, setCam: boolean[], camera: PerspectiveCamera) => void,
-	resetAnimation: (time: number, setAnime: boolean[], models: ThreeModels) => void
+	resetAnimation: (time: number, setAnime: boolean[], scene: Scene,light: HemisphereLight, models: ThreeModels) => boolean
 }
 
 export type ThreeModels = {
