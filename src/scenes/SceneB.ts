@@ -122,7 +122,7 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					this.reset(); // TMP
+					// this.reset(); // TMP
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setCam.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -151,8 +151,7 @@ export default class SceneB {
 						models.aureole[0],
 						models.aureole[1],
 						models.aureole[2],
-						// models.water[0],
-						// models.cube,
+						models.water[0],
 						// this.ambientLight,
 						// this.hemisphereLight,
 					);
@@ -203,7 +202,7 @@ export default class SceneB {
 		this.models.camera[1].lookAt(0, 0, 0);
 		this.models.camera[1].position.set(-5.14, -11.93, 12.39);
 		this.models.camera[1].rotation.set(0.706, -0.067, 0.056);
-		this.models.camera[1].far = 500;
+		this.models.camera[1].far = 300;
 		this.models.camera[1].updateProjectionMatrix();
 
 		/* - Fonts - */

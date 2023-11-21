@@ -4,6 +4,7 @@ import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHel
 
 export default function initAnimationsB(): AnimationFunctionB {
 	const coor = new Vector3(0, 0, 0);
+	const direction = new Vector3(0, 0, 0);
 
 	const move = {
 		end: new Euler(0, 0, 0, 'XYZ'),
@@ -17,7 +18,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 			current.z = MathUtils.lerp(current.z, end.z, alpha);
 		},
 		toWoDampling: (current: Vector3, end: Vector3, speed: number) => {
-			const direction = new Vector3().subVectors(end, current);
+			direction.subVectors(end, current);
 			const distanceToTravel = speed;
 			const distanceToEnd = direction.length();
 
@@ -519,7 +520,9 @@ export default function initAnimationsB(): AnimationFunctionB {
 				models.dragonUnBrokenNoSphere.position.set(-4.75, -0.58, -0.53);
 				models.dragonUnBrokenNoSphere.rotation.set(-0.711, -0.64, 0.010);
 				models.dragonUnBrokenNoSphere.scale.set(2, 2, 2);
-				models.dragonUnBrokenNoSphere.visible
+				models.dragonUnBrokenNoSphere.visible = true;
+				models.water[0].rotation.x = -Math.PI / 2;
+				models.water[0].position.y = -6;
 				// const position = new Vector3(0, 0, 0);
 
 				// position.set(-0.39, 2.1, -1.42);
@@ -545,28 +548,34 @@ export default function initAnimationsB(): AnimationFunctionB {
 				// models.dragonUnBrokenNoSphere.scale.set(2, 2, 2);
 				// models.camera[0].modelViewMatrix
 				// console.log('ici')
+				models.dragonParticles.position.copy(models.cube.position);
 				setAnime[0] = true;
-				// models.camera[1].lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
 			}
-			if (time < 6) {
+			// if (time < 6) {
 				models.camera[1].position.set(
 					MathUtils.lerp(models.camera[1].position.x, -11.668095624446837, 0.01),
 					MathUtils.lerp(models.camera[1].position.y, 7.0791641969833075, 0.01),
-					MathUtils.lerp(models.camera[1].position.z, 27.986620027884758, 0.01),
+					MathUtils.lerp(models.camera[1].position.z, 27.986620027884758, 0.01)
+				);
+				models.dragonParticles.position.set(
+					MathUtils.lerp(models.dragonParticles.position.x, 8.49699361604131276, 0.01),
+					MathUtils.lerp(models.dragonParticles.position.y, -0.2164219053147923, 0.01),
+					MathUtils.lerp(models.dragonParticles.position.z, -0.8403326154054094, 0.01)
 				);
 				models.cube.position.set(
-					MathUtils.lerp(models.cube.position.x, 8.49699361604131276, 0.01),
-					MathUtils.lerp(models.cube.position.y, -0.2164219053147923, 0.01),
-					MathUtils.lerp(models.cube.position.z, -0.8403326154054094, 0.01),
+					MathUtils.lerp(models.cube.position.x, 110, 0.01),
+					MathUtils.lerp(models.cube.position.y, -38, 0.01),
+					MathUtils.lerp(models.cube.position.z, -150, 0.01)
 				);
-				models.camera[1].lookAt(models.cube.position.x, models.cube.position.y, models.cube.position.z);
+				models.camera[1].lookAt(models.dragonParticles.position);
 				models.cube.lookAt(models.camera[1].position);
-			} else if (time < 15) {
-				models.cube.position.x = MathUtils.lerp(models.cube.position.x, 110, 0.01),
-				models.cube.position.y = MathUtils.lerp(models.cube.position.y, -38, 0.01),
-				models.cube.position.z = MathUtils.lerp(models.cube.position.z, -150, 0.01),
-				models.cube.lookAt(models.camera[1].position);
-			}
+
+				if (time > 15) {
+					models.water[0].position.y = MathUtils.lerp(models.water[0].position.y, -38, 0.01),
+					console.log(models.water[0].position);
+					models.water[0].material.uniforms['time'].value = time / 2;
+				}
+			// }
 		}
 	};
 }

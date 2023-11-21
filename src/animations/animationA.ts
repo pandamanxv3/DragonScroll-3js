@@ -207,7 +207,6 @@ export default function initAnimationA(): AnimationFunctionA[] {
     }
     
     animations[6] = (elapsedTime, models, camera, scene, transition) => {
-    
         if (transition.animations_transiA[animations_name.cube] == false) {
             camera.position.set(-11.668095624446837, 7.0791641969833075, 27.986620027884758)
             camera.rotation.set(0, 0, 0)

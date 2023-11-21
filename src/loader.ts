@@ -353,15 +353,7 @@ export default async function Loader(): Promise<ThreeModels> {
 		);
 
 		/* -------------------- Cube -------------------- */
-		// objects.cube = new Mesh(
-		// 	new BoxGeometry(4, 2.55, 200, 2, 1, 100),
-		// 	new MeshBasicMaterial({
-		// 		color: 0xff0000,
-		// 		wireframe: true,
-		// 		side: BackSide
-		// 	})
-		// );
-		const sideGeometry = new PlaneGeometry(1, 1, 1, 100);
+		const sideGeometry = new PlaneGeometry(1, 1, 1, 25);
 		const sideMaterial = new MeshBasicMaterial({
 			color: 0xff0000,
 			wireframe: true,
@@ -373,18 +365,18 @@ export default async function Loader(): Promise<ThreeModels> {
 			new Mesh(sideGeometry, sideMaterial),
 			new Mesh(sideGeometry, sideMaterial)
 		];
-		sides[0].position.set(0, 2.55, 0);
+		sides[0].position.set(0, 10.2, 0);
 		sides[0].rotation.set(Math.PI / 2, 0, 0);
-		sides[0].scale.set(8, 200, 1);
-		sides[1].position.set(4, 0, 0);
+		sides[0].scale.set(32, 200, 1);
+		sides[1].position.set(16, 0, 0);
 		sides[1].rotation.set(Math.PI / 2, -Math.PI / 2, 0);
-		sides[1].scale.set(5.10, 200, 1);
-		sides[2].position.set(0, -2.55, 0);
+		sides[1].scale.set(20.4, 200, 1);
+		sides[2].position.set(0, -10.2, 0);
 		sides[2].rotation.set(-Math.PI / 2, 0, 0);
-		sides[2].scale.set(8, 200, 1);
-		sides[3].position.set(-4, 0, 0);
+		sides[2].scale.set(32, 200, 1);
+		sides[3].position.set(-16, 0, 0);
 		sides[3].rotation.set(Math.PI / 2, Math.PI / 2, 0);
-		sides[3].scale.set(5.10, 200, 1);
+		sides[3].scale.set(20.4, 200, 1);
 		objects.cube = new Group;
 		objects.cube.add(
 			sides[0],
@@ -456,38 +448,41 @@ export default async function Loader(): Promise<ThreeModels> {
 					n.material = materials.aureole;
 				}
 
-				if (objectsName == 'dragonCenter') { objects.dragonCenter = n }
-				else if (objectsName == 'dragonDown') { objects.dragonDown = n }
-				else if (objectsName == 'dragonSphere') { objects.dragonSphere = n }
-				else if (objectsName == 'dragonUp') { objects.dragonUp = n }
-				else if (objectsName == 'rockA') { objects.rockA = n }
-				else if (objectsName == 'rockB') { objects.rockB = n }
-				else if (objectsName == 'rockC') { objects.rockC = n }
-				else if (objectsName == 'rockD') { objects.RockD = n }
-				else if (objectsName == 'dragonBroken') { objects.dragonBroken = n }
-				// else if (objectsName == 'dragonUnbroken') { objects.dragonUnBroken = n }
-				else if (objectsName == 'gate') { objects.gate = n }
+				if (objectsName == 'dragonCenter') { objects.dragonCenter = n; }
+				else if (objectsName == 'dragonDown') { objects.dragonDown = n; }
+				else if (objectsName == 'dragonSphere') { objects.dragonSphere = n; }
+				else if (objectsName == 'dragonUp') { objects.dragonUp = n; }
+				else if (objectsName == 'rockA') { objects.rockA = n; }
+				else if (objectsName == 'rockB') { objects.rockB = n; }
+				else if (objectsName == 'rockC') { objects.rockC = n; }
+				else if (objectsName == 'rockD') { objects.RockD = n; }
+				else if (objectsName == 'dragonBroken') { objects.dragonBroken = n; }
+				// else if (objectsName == 'dragonUnbroken') { objects.dragonUnBroken = n; }
+				else if (objectsName == 'gate') { objects.gate = n; }
 			})
 		}
 
-		let particlesGeometry = new BufferGeometry;
-		const particlesMaterial = new PointsMaterial({
-			color: 0xffffff,
-			size: 0.1,
-			sizeAttenuation: true
-		});
-
+		
 		objects.dragonUnBroken = new Mesh(mergeGeometries(modelDragon, false), materials.dragonUnbroken.clone());
 		objects.dragonUnBroken.scale.set(0.1, 0.1, 0.1);
-		(objects.dragonUnBroken.material as MeshStandardMaterial).wireframe = true
-
+		(objects.dragonUnBroken.material as MeshStandardMaterial).wireframe = true;
+		
 		objects.dragonWireframe = new Mesh(objects.dragonUnBroken.geometry, new MeshBasicMaterial({
 			color: 0x00000,
 			wireframe: true
 		}));
 		objects.dragonWireframe.scale.set(0.1, 0.1, 0.1);
-
-		particlesGeometry.setAttribute('position', new Float32BufferAttribute(positionDragon, 3));
+		
+		const positionDragonLenght: number = positionDragon.length / 2;
+		for (let i = 0; positionDragonLenght != positionDragon.length; i += 3) {
+			positionDragon.splice(i, 3);
+		}
+		let particlesGeometry = new BufferGeometry().setAttribute('position', new Float32BufferAttribute(positionDragon, 3));
+		const particlesMaterial = new PointsMaterial({
+			color: 0xffffff,
+			size: 0.1,
+			sizeAttenuation: true
+		});
 		const particles = new Points(particlesGeometry, particlesMaterial);
 		particles.scale.set(0.1, 0.1, 0.1);
 		objects.dragonParticles = particles;
