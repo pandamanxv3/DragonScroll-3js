@@ -1,0 +1,26 @@
+{
+  "name": "dragon-3js",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "@types/three": "^0.158.2",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-plugin-glsl": "^1.1.2"
+  },
+  "dependencies": {
+    "gsap": "^3.12.2",
+    "three": "^0.158.0",
+    "three-bmfont-text": "^2.3.0"
+  }
+}

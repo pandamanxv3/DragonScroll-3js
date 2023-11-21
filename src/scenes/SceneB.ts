@@ -1,0 +1,288 @@
+import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, Vector3, Color, Clock, WebGLRenderer, ShaderMaterial } from 'three'
+import { AnimationFunctionB, ThreeModels, Transition } from '../types'
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
+import initAnimationsB from '../animations/animationB'
+
+export default class SceneB {
+	public fbo: WebGLRenderTarget;
+
+	private clock: Clock;
+	private ambientLight: AmbientLight;
+	private reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[];
+	private scene: Scene;
+	private animations: AnimationFunctionB;
+	private animationFuncs: ((elapsedTime: number) => void)[];
+	private parameters: {
+		index: number,
+		oldTime: number,
+		nextAnimation: number,
+		isOldTimeSet: boolean,
+		setAnime: boolean[],
+		setCam: boolean[],
+		next: () => void
+	};
+	private models: ThreeModels;
+	private renderer: WebGLRenderer;
+
+	constructor(models: ThreeModels, renderer: WebGLRenderer, transition: Transition) {
+		const cameraListener = (event: MouseEvent) => this.animations.cameraAnimation(event, models.camera[1]);
+
+		this.clock = new Clock;
+		this.ambientLight = new AmbientLight(0xffffff, 0.5);
+		this.reactAreaLights = [];
+		for (let i = 0; i < 9; i++) {
+			const light = new RectAreaLight('black', 0.0, 85, 85);
+			const helper = new RectAreaLightHelper(light);
+			this.reactAreaLights.push({ light, helper });
+		}
+		this.scene = new Scene;
+		this.animations = initAnimationsB();
+		this.parameters = {
+			index: 0,
+			oldTime: 0,
+			nextAnimation: 5,
+			isOldTimeSet: false,
+			setAnime: [false, false, false, false, false, false, false, false, false, false],
+			setCam: [false, false, false, false, false, false, false, false, false, false],
+			next: () => {
+				this.parameters.isOldTimeSet = false;
+				this.parameters.index++;
+				this.parameters.nextAnimation++;
+				if (this.parameters.index > 3) {
+					this.parameters.index = 0;
+					this.parameters.oldTime = 0;
+					this.parameters.nextAnimation = 5;
+					// transition.sceneToScene();
+				}
+			}
+		}
+
+		this.animationFuncs = [
+			(elapsedTime) => {
+				if (!this.parameters.isOldTimeSet) {
+					this.scene.remove(models.cube);
+					this.reset();
+					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
+					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
+					this.scene.add(
+						this.ambientLight,
+						models.dragonUnBrokenNoSphere,
+						models.fontParticules,
+						models.fontA2,
+						models.backgroundShader,
+						models.water[1]
+					);
+					this.parameters.oldTime = this.clock.getElapsedTime();
+					this.parameters.isOldTimeSet = true;
+				}
+
+				if (!this.animations.waterAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.ambientLight, models, transition) && !this.parameters.setAnime[9]) {
+					transition.needScroll = true,
+						this.parameters.setAnime[9] = true;
+				}
+				models.water[1].material.uniforms['time'].value = elapsedTime / 2;
+				(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = elapsedTime;
+			},
+			(elapsedTime) => {
+				if (!this.parameters.isOldTimeSet) {
+					this.scene.remove(
+						this.ambientLight,
+						models.dragonUnBrokenNoSphere,
+						models.fontParticules,
+						models.fontA2,
+						models.backgroundShader,
+						models.water[1]
+					);
+					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
+					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
+
+					this.reactAreaLights.forEach(({ light, helper }) => {
+						helper.visible = false
+						this.scene.add(light, helper)
+					});
+					models.fontB.forEach((font) => {
+						font.lookAt(models.camera[1].position)
+						font.visible = false
+						this.scene.add(font)
+					});
+					this.scene.add(
+						models.dragonWireframe,
+						models.torus[0],
+						models.torus[1]
+					);
+					this.parameters.oldTime = this.clock.getElapsedTime();
+					this.parameters.isOldTimeSet = true;
+				}
+
+				if (!this.animations.flashAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.reactAreaLights, models, this.scene) && !this.parameters.setAnime[9]) {
+					this.parameters.setAnime[9] = true;
+					transition.needScroll = true;
+				}
+				this.animations.cameraFlashAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setCam, models, cameraListener);
+			},
+			(elapsedTime) => {
+				if (!this.parameters.isOldTimeSet) {
+					this.reset(); // TMP
+					window.removeEventListener('mousemove', cameraListener);
+					this.parameters.setAnime = Array(this.parameters.setCam.length).fill(false);
+					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
+					this.scene.add(
+						models.dragonParticles,
+						models.cube
+					);
+					this.parameters.oldTime = this.clock.getElapsedTime();
+					this.parameters.isOldTimeSet = true;
+				}
+				if (!this.animations.galaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.reactAreaLights, models, this.scene)) {
+					this.parameters.next();
+				}
+				this.animations.cameraGalaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setCam, models.camera[1]);
+			},
+			(elapsedTime) => {
+				if (!this.parameters.isOldTimeSet) {
+					this.scene.remove(models.dragonParticles);
+					this.parameters.setAnime = Array(this.parameters.setCam.length).fill(false);
+					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
+					this.scene.add(
+						this.ambientLight,
+						models.gate,
+						models.dragonUnBrokenNoSphere,
+						models.dragonSphere,
+						models.aureole[0],
+						models.aureole[1],
+						models.aureole[2],
+						// models.water[0],
+						// models.cube,
+						// this.ambientLight,
+						// this.hemisphereLight,
+					);
+					this.parameters.oldTime = this.clock.getElapsedTime();
+					this.parameters.isOldTimeSet = true;
+				}
+				this.animations.resetAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, models);
+			}
+		]
+		this.models = models;
+		this.renderer = renderer;
+		this.fbo = new WebGLRenderTarget(window.innerWidth, window.innerHeight, { type: HalfFloatType });
+	}
+
+	public reset() {
+		this.ambientLight.color = new Color(0xffffff);
+		this.ambientLight.intensity = 0.5;
+		const positionLight = [
+			new Vector3(-150, 100, 0),
+			new Vector3(-200, 150, -150),
+			new Vector3(0, 150, -100),
+			new Vector3(150, 150, -100),
+			new Vector3(-100, 0, -100),
+			new Vector3(0, 0, -100),
+			new Vector3(100, 0, -100),
+			new Vector3(-100, -100, -50),
+			new Vector3(0, -100, -100)
+		];
+		const lookAtLight = [
+			new Vector3(100, 0, 0),
+			new Vector3(100, -100, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(100, 100, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(0, 0, 0)
+		];
+		this.reactAreaLights.forEach(({ light, helper }, i): void => {
+			light.position.copy(positionLight[i]);
+			light.lookAt(lookAtLight[i]);
+			helper.visible = true;
+		});
+		this.scene.background = new Color("black");
+
+		/* - Camera - */
+		this.models.camera[1].lookAt(0, 0, 0);
+		this.models.camera[1].position.set(-5.14, -11.93, 12.39);
+		this.models.camera[1].rotation.set(0.706, -0.067, 0.056);
+		this.models.camera[1].far = 500;
+		this.models.camera[1].updateProjectionMatrix();
+
+		/* - Fonts - */
+		this.models.fontParticules.position.set(-1.268, 3.4, 2);
+		this.models.fontParticules.rotation.set(-2.25, Math.PI, 0.05);
+		this.models.fontParticules.scale.set(-1.8, -1.8, -1.8);
+		this.models.fontA2.position.set(4.381, 22.855, 20);
+		this.models.fontA2.rotation.set(2.606, 3.406, 0);
+		this.models.fontB[0].position.set(-150, 100, 0);
+		this.models.fontB[1].position.set(-100, 0, -100);
+		this.models.fontB[2].position.set(0, 150, -100);
+		this.models.fontB[3].position.set(0, -100, -100);
+		this.models.fontB[4].position.set(100, 0, -100);
+		this.models.fontB[5].position.set(150, 150, -100);
+
+		/* - Models - */
+		this.models.dragonUnBrokenNoSphere.scale.set(-2, -2, -2);
+		this.models.dragonUnBrokenNoSphere.rotation.set(2.1959, -0.64, 0.010);
+		this.models.dragonUnBrokenNoSphere.visible = true;
+
+		this.models.dragonParticles.visible = false;
+		// for (let i = 0; i < this.models.dragonParticles.geometry.attributes.position.array.length * 3; i++)
+		// this.models.dragonParticles.geometry.attributes.position.array[i] = this.models.dragonParticles.geometry.attributes.position.array[i];
+
+		this.models.water[1].position.set(-5.2, 0.988, -4.912);
+		this.models.water[1].scale.set(15, 15, 0.413);
+		this.models.water[1].rotation.set(0.825, -0.179, -0.052);
+
+		this.models.backgroundShader.position.set(-5.28, 0.988, -4.912);
+		this.models.backgroundShader.scale.set(15, 15, 0.413);
+		this.models.backgroundShader.rotation.set(0.825, -0.179, -0.052);
+
+		this.models.torus[0].position.set(0, 0, -50);
+		this.models.torus[0].rotation.x = Math.PI / 2;
+		this.models.torus[1].position.set(0, 0, -50);
+		this.models.torus[1].rotation.x = Math.PI / 2;
+
+		this.models.cube.visible = false;
+	
+		/* - Models for reset - */
+		this.models.gate.scale.set(0.734, 1, 0.623);
+		this.models.gate.position.set(-0.39, 2.1, -1.42);
+
+		this.models.dragonSphere.position.set(0, 0, 0)
+		this.models.dragonSphere.scale.set(0.04, 0.04, 0.04);
+		this.models.dragonSphere.geometry.center();
+		this.models.dragonSphere.geometry.computeBoundingBox();
+
+		this.models.aureole[0].scale.set(10, 10, 7);
+		this.models.aureole[1].scale.set(12, 12, 7);
+		this.models.aureole[2].scale.set(15, 15, 7);
+		this.models.aureole[0].position.set(0, 0, -25);
+		this.models.aureole[1].position.set(0, 0, -25);
+		this.models.aureole[2].position.set(0, 0, -25);
+		this.models.aureole[0].rotation.set(0, 0, 0);
+		this.models.aureole[1].rotation.set(0, 0, 0);
+		this.models.aureole[2].rotation.set(0, 0, 0);
+	}
+
+	public render(_, rtt: boolean, transition: Transition) {
+		const elapsedTime = this.clock.getElapsedTime();
+		this.animationFuncs[this.parameters.index](elapsedTime);
+		if (transition.sceneWeAt == 1)
+			this.nextAnim(transition);
+		this.renderer.setClearColor('black');
+
+		if (rtt) {
+			this.renderer.setRenderTarget(this.fbo);
+			this.renderer.clear();
+			this.renderer.render(this.scene, this.models.camera[1]);
+
+		} else {
+			this.renderer.setRenderTarget(null);
+			this.renderer.render(this.scene, this.models.camera[1]);
+		}
+	}
+
+	private nextAnim(transition: Transition): void {
+		if (transition.animation == this.parameters.nextAnimation)
+			this.parameters.next();
+	}
+}
