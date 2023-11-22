@@ -368,18 +368,18 @@ export default async function Loader(): Promise<ThreeModels> {
 			new Mesh(sideGeometry, sideMaterial),
 			new Mesh(sideGeometry, sideMaterial)
 		];
-		sides[0].position.set(0, 2.55, 0);
+		sides[0].position.set(0, 1.275, 0);
 		sides[0].rotation.set(Math.PI / 2, 0, 0);
-		sides[0].scale.set(8, 200, 1);
-		sides[1].position.set(4, 0, 0);
+		sides[0].scale.set(4, 200, 1);
+		sides[1].position.set(2, 0, 0);
 		sides[1].rotation.set(Math.PI / 2, -Math.PI / 2, 0);
-		sides[1].scale.set(5.1, 200, 1);
-		sides[2].position.set(0, -2.55, 0);
+		sides[1].scale.set(2.55, 200, 1);
+		sides[2].position.set(0, -1.275, 0);
 		sides[2].rotation.set(-Math.PI / 2, 0, 0);
-		sides[2].scale.set(8, 200, 1);
-		sides[3].position.set(-4, 0, 0);
+		sides[2].scale.set(4, 200, 1);
+		sides[3].position.set(-2, 0, 0);
 		sides[3].rotation.set(Math.PI / 2, Math.PI / 2, 0);
-		sides[3].scale.set(5.1, 200, 1);
+		sides[3].scale.set(2.55, 200, 1);
 		objects.cube = new Group;
 		objects.cube.add(
 			sides[0],
@@ -475,9 +475,9 @@ export default async function Loader(): Promise<ThreeModels> {
 		}));
 		objects.dragonWireframe.scale.set(0.1, 0.1, 0.1);
 		
-		const positionDragonLenght: number = positionDragon.length / 2;
-		for (let i = 0; positionDragonLenght != positionDragon.length; i += 3) {
-			positionDragon.splice(i, 3);
+		const positionDragonLenght: number = positionDragon.length / 10;
+		for (let i = 0; positionDragonLenght < positionDragon.length; i += 3) {
+			positionDragon.splice(i, 30);
 		}
 		let particlesGeometry = new BufferGeometry().setAttribute('position', new Float32BufferAttribute(positionDragon, 3));
 		const particlesMaterial = new PointsMaterial({

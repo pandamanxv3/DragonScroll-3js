@@ -232,6 +232,7 @@ export default class SceneB {
 		this.models.fontB[5].position.set(150, 150, -100);
 
 		/* - Models - */
+		this.models.dragonUnBrokenNoSphere.position.set(-4.75, -0.58, -0.53);
 		this.models.dragonUnBrokenNoSphere.scale.set(-2, -2, -2);
 		this.models.dragonUnBrokenNoSphere.rotation.set(2.1959, -0.64, 0.010);
 		this.models.dragonUnBrokenNoSphere.visible = true;

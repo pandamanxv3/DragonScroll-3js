@@ -22,7 +22,7 @@ export function cloneThreeModels(models: ThreeModels): ThreeModels {
 		rockC: models.rockC.clone(),
 		RockD: models.RockD.clone(),
 		dragonBroken: models.dragonBroken.clone(),
-		dragonUnBrokenNoSphere: models.dragonUnBrokenNoSphere,
+		dragonUnBrokenNoSphere: models.dragonUnBrokenNoSphere.clone(),
 		planeShader: models.planeShader,
 		gate: models.gate.clone(),
 		aureole: models.aureole.map((group) => group.clone()),

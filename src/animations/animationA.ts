@@ -206,18 +206,19 @@ export default function initAnimationA(): AnimationFunctionA[] {
         return;
     }
     
+    const color = new Color('black');
     animations[6] = (elapsedTime, models, camera, scene, transition) => {
         if (transition.animations_transiA[animations_name.cube] == false) {
-            camera.position.set(-11.668095624446837, 7.0791641969833075, 27.986620027884758)
-            camera.rotation.set(0, 0, 0)
-            scene.background = new Color('black');
-            models.cube.position.set(-11.668095624446837, 7.0791641969833075, 27.986620027884758)
-            models.cube.rotation.set(0, 0, 0)
-            models.cube.visible = true
-            transition.animations_transiA[animations_name.cube] = true
-            transition.needScroll = true // a changer
+            camera.position.set(-11.668095624446837, 7.0791641969833075, 27.986620027884758);
+            camera.rotation.set(0, 0, 0);
+            scene.background = color;
+            models.cube.position.set(-11.668095624446837, 7.0791641969833075, 27.986620027884758);
+            models.cube.rotation.set(0, 0, 0);
+            models.cube.visible = true;
+            transition.animations_transiA[animations_name.cube] = true;
+            transition.needScroll = true; // a changer
         }
-        models.cube.position.z = (elapsedTime * 12) % 10
+        models.cube.position.z = (elapsedTime * 12) % 10;
     }
 
     return animations;
