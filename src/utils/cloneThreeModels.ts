@@ -13,10 +13,7 @@ export function cloneThreeModels(models: ThreeModels): ThreeModels {
 		dragonUnBroken: models.dragonUnBroken.clone(),
 		dragonWireframe: models.dragonWireframe.clone(),
 		dragonParticles: models.dragonParticles.clone(),
-		dragonCenter: models.dragonCenter.clone(),
-		dragonDown: models.dragonDown.clone(),
 		dragonSphere: models.dragonSphere.clone(),
-		dragonUp: models.dragonUp.clone(),
 		rockA: models.rockA.clone(),
 		rockB: models.rockB.clone(),
 		rockC: models.rockC.clone(),
@@ -28,5 +25,8 @@ export function cloneThreeModels(models: ThreeModels): ThreeModels {
 		aureole: models.aureole.map((group) => group.clone()),
 		camera: models.camera,
 		water: models.water,
+		textContainer: models.textContainer,
+		textTitle: models.textTitle,
+		textSubtitle: models.textSubtitle,
 	};
 }

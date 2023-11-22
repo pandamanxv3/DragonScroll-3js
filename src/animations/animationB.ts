@@ -1,6 +1,7 @@
 import { Color, Euler, Material, MathUtils, Matrix4, MeshStandardMaterial, RectAreaLight, Vector3 } from 'three';
 import { AnimationFunctionB } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
+import '../scenes/font.css'
 
 export default function initAnimationsB(): AnimationFunctionB {
 	const coor = new Vector3(0, 0, 0);
@@ -203,11 +204,19 @@ export default function initAnimationsB(): AnimationFunctionB {
 			return true;
 		},
 		flashAnimation: (time, setAnime, rectAreaLights, models, scene) => {
+			
 			models.torus[0].rotation.z = time * 0.1;
 			models.torus[1].rotation.z = -time * 0.1;
 			if (time < 1) {
+				
+				models.textTitle.style.animation = 'fadeIn 0.5s forwards';
+				models.textTitle.style.display = 'block';
 				color.on(rectAreaLights[0], color.white, 0.1);
 				color.on(rectAreaLights[2], color.white, 0.1);
+				models.textTitle.style.animation = 'fadeOut 0.4s 2.9s forwards';
+				models.textTitle.addEventListener('animationend', () => {
+					models.textTitle.style.display = 'none';
+				});
 			} else if (time < 3.5) {
 				color.off(rectAreaLights[0], color.white, 0.1);
 				color.off(rectAreaLights[2], color.white, 0.1);
@@ -247,6 +256,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 				}
 			} else if (time < 4) {
 				if (!setAnime[3]) {
+
 					(scene.background as Color).copy(color.black);
 					(models.torus[0].material as MeshStandardMaterial).color = color.cyan;
 					(models.torus[1].material as MeshStandardMaterial).color = color.purple;

@@ -26,10 +26,7 @@ export type ThreeModels = {
 	dragonUnBroken: Mesh,
 	dragonWireframe: Mesh,
 	dragonParticles: Points,
-	dragonCenter: Mesh,
-	dragonDown: Mesh,
 	dragonSphere: Mesh,
-	dragonUp: Mesh,
 	rockA: Mesh,
 	rockB: Mesh,
 	rockC: Mesh,
@@ -41,6 +38,9 @@ export type ThreeModels = {
 	aureole: Group[]
 	camera: PerspectiveCamera[],
 	water: Water[],
+	textContainer: HTMLElement,
+	textTitle: HTMLElement,
+	textSubtitle: HTMLElement
 }
 
 

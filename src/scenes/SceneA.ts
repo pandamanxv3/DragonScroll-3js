@@ -1,7 +1,8 @@
-import { Scene , PerspectiveCamera, AmbientLight, HemisphereLight, WebGLRenderTarget, HalfFloatType, WebGLRenderer, Color } from 'three';
+import { Scene, PerspectiveCamera, AmbientLight, HemisphereLight, WebGLRenderTarget, HalfFloatType, WebGLRenderer, Color } from 'three';
 import { AnimationFunctionA, ThreeModels, Transition } from '../types';
 import initAnimationsA from '../animations/animationA';
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min';
+import './font.css';
 
 export default class SceneA {
 	public fbo: WebGLRenderTarget;
@@ -12,6 +13,10 @@ export default class SceneA {
 	private animations: AnimationFunctionA[];
 	private models: ThreeModels;
 	private renderer: WebGLRenderer;
+	private textHTML: HTMLElement[];
+	private textContainer: HTMLElement;
+	private textTitle: HTMLElement;
+	private textSubtitle: HTMLElement;
 
 	constructor(models: ThreeModels, renderer: WebGLRenderer, gui: GUI) {  // TMP - Debug
 		this.ambientLight = new AmbientLight(0xfff0dd, 0.5);
@@ -21,6 +26,9 @@ export default class SceneA {
 		this.models = models;
 		this.renderer = renderer;
 		this.fbo = new WebGLRenderTarget(window.innerWidth, window.innerHeight, { type: HalfFloatType });
+
+
+		// this.textTitle.style.fontWeight = '500';
 
 		this.scene.add(
 			models.gate,
@@ -94,6 +102,18 @@ export default class SceneA {
 		this.hemisphereLight.visible = true;
 		this.ambientLight.visible = true;
 		this.scene.background = this.models.backgroundTexture;
+
+		/* - Font - */
+
+		this.models.textTitle.style.display = 'block';
+		this.models.textSubtitle.style.display = 'block';
+		this.models.textTitle.style.animation = 'fadeIn 1s forwards';
+		this.models.textSubtitle.style.animation = 'fadeIn 3s forwards';
+		this.models.textSubtitle.addEventListener('animationend', () => {
+			this.models.textSubtitle.style.animation = 'blink 2s linear infinite';
+		});
+
+
 	}
 
 	public render(delta: number, rtt: boolean, transition: Transition): void {
