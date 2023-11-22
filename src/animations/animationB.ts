@@ -318,6 +318,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 				if (time < 7.5) {
 					if (!setAnime[7]) {
 						models.fontB[0].visible = true;
+						models.fontB[1].visible = true;
 						models.fontB[2].visible = true;
 						models.fontB[4].visible = true;
 						setAnime[7] = true;
@@ -329,7 +330,6 @@ export default function initAnimationsB(): AnimationFunctionB {
 					color.on(rectAreaLights[6], color.white, 0.05);
 				} else {
 					if (!setAnime[8]) {
-						models.fontB[1].visible = true;
 						models.fontB[3].visible = true;
 						models.fontB[5].visible = true;
 						setAnime[8] = true;
@@ -500,7 +500,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 						move.toWoDampling(models.cube.position, models.camera[1].position, 0.00005);
 					}
 					if (time > 12.85) {
-						models.camera[1].far = 280 - 100 * (time - 12.85);
+						models.camera[1].far = 2800 - 1000 * (time - 128.5);
 						models.camera[1].updateProjectionMatrix();
 					}
 				} else {
@@ -568,11 +568,11 @@ export default function initAnimationsB(): AnimationFunctionB {
 					MathUtils.lerp(models.dragonParticles.position.y, -0.2164219053147923, 0.01),
 					MathUtils.lerp(models.dragonParticles.position.z, -0.8403326154054094, 0.01)
 				);
-				models.cube.position.set(
-					MathUtils.lerp(models.cube.position.x, 110, 0.01),
-					MathUtils.lerp(models.cube.position.y, -38, 0.01),
-					MathUtils.lerp(models.cube.position.z, -150, 0.01)
-				);
+				// models.cube.position.set(
+				// 	MathUtils.lerp(models.cube.position.x, 0, 0.01),
+				// 	MathUtils.lerp(models.cube.position.y, -10, 0.01),
+				// 	MathUtils.lerp(models.cube.position.z, 0, 0.01)
+				// );
 				models.camera[1].lookAt(models.dragonParticles.position);
 				models.cube.lookAt(models.camera[1].position);
 				if (time > 3) {
