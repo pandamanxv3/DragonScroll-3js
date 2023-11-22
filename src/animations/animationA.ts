@@ -43,12 +43,15 @@ export default function initAnimationA(): AnimationFunctionA[] {
 			models.textSubtitle.style.animation = '';
 			models.textSubtitle.style.opacity = '0';
 			models.textSubtitle.style.animation = 'fadeOutSub 1s forwards';
+			models.creditText.style.animation = 'fadeOut 1s forwards';
+			
 			models.textSubtitle.addEventListener('animationend', () => {
 				models.textSubtitle.style.animation = '';
 			});
-
+			
 			models.textTitle.addEventListener('animationend', () => {
 				models.textTitle.style.display = 'none';
+				models.creditText.style.display = 'none';
 			});
 
 			timer = elapsedTime;
@@ -199,7 +202,7 @@ export default function initAnimationA(): AnimationFunctionA[] {
 				z: 2,
 				duration: 3,
 				ease: 'expo.out',
-				delay: 0.2
+				delay: 0.45
 			})
 		}
 		if (timer + 0.41 < elapsedTime && transition.animations_transiA[animations_name.water2] == false) {

@@ -509,6 +509,7 @@ export default async function Loader(): Promise<ThreeModels> {
 		objects.textContainer = document.getElementById('font') as HTMLElement;
 		objects.textTitle = document.getElementById('overlay') as HTMLElement;
 		objects.textSubtitle = document.getElementById('scroll') as HTMLElement;
+		objects.creditText = document.getElementById('credits') as HTMLElement;
 
 		objects.textContainer.style.transform = 'translate(20%, 10%)';
 
@@ -521,6 +522,21 @@ export default async function Loader(): Promise<ThreeModels> {
 		objects.textSubtitle.style.color = '#dbdbdb';
 		objects.textSubtitle.style.fontFamily = 'pixel, sans-serif';
 		objects.textSubtitle.style.fontSize = '1.55em';
+
+		
+		objects.creditText.style.position = 'absolute';
+		objects.creditText.style.bottom = '1.5%';
+		objects.creditText.style.right = '50%';
+		objects.creditText.style.transform = 'translate(50%, 0%)';
+		objects.creditText.style.borderRadius = '5px';
+		objects.creditText.style.color = "#a84728";
+		objects.creditText.style.fontFamily = 'pixel, sans-serif';
+		// objects.creditText.style.transform = 'translate(20%, 10%)';
+		// objects.creditText.style.borderRadius = '5px';
+		// objects.creditText.style.color = '#ffffff';
+		// objects.creditText.style.fontFamily = 'pixel, sans-serif';
+		// objects.creditText.style.fontSize = '15em';
+
 
 		return objects as ThreeModels;
 	} catch (error) {

@@ -28,5 +28,6 @@ export function cloneThreeModels(models: ThreeModels): ThreeModels {
 		textContainer: models.textContainer,
 		textTitle: models.textTitle,
 		textSubtitle: models.textSubtitle,
+		creditText : models.creditText,
 	};
 }

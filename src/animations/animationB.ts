@@ -210,8 +210,8 @@ export default function initAnimationsB(): AnimationFunctionB {
 			models.water[1].material.uniforms['time'].value = time / 2;
 			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
 			if (time < 1) {
-				models.camera[1].rotation.x += 0.05;
-				models.camera[1].position.y += 0.05;
+				// models.camera[1].rotation.x += 0.05;
+				models.camera[1].position.y += 0.02;
 			}
 			else return false;
 			return true;

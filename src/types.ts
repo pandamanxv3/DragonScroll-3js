@@ -41,7 +41,8 @@ export type ThreeModels = {
 	water: Water[],
 	textContainer: HTMLElement,
 	textTitle: HTMLElement,
-	textSubtitle: HTMLElement
+	textSubtitle: HTMLElement,
+	creditText: HTMLElement
 }
 
 

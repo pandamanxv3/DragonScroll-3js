@@ -105,8 +105,10 @@ export default class SceneA {
 
 		/* - Font - */
 
+		// this.models.creditText.style.display = 'block';
 		this.models.textTitle.style.display = 'block';
 		this.models.textSubtitle.style.display = 'block';
+		this.models.creditText.style.display = 'block';
 		this.models.textTitle.style.animation = 'fadeIn 1s forwards';
 		this.models.textSubtitle.style.animation = 'fadeIn 3s forwards';
 		this.models.textSubtitle.addEventListener('animationend', () => {

@@ -22,8 +22,28 @@ export default class Transition {
 		// this.needsTextureChange = false;
 	}
 
+	private resize(models: ThreeModels, camera: OrthographicCamera, renderer: WebGLRenderer) {
+		models.camera[0].aspect = window.innerWidth / window.innerHeight;
+		models.camera[0].updateProjectionMatrix();
+		models.camera[1].aspect = window.innerWidth / window.innerHeight;
+		models.camera[1].updateProjectionMatrix();
+	
+		camera.left = window.innerWidth / -2;
+		camera.right = window.innerWidth / 2;
+		camera.top = window.innerHeight / 2;
+		camera.bottom = window.innerHeight / -2;
+		camera.updateProjectionMatrix();
+	
+		(models.backgroundShader.material as ShaderMaterial).uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
+	
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+	  }
+
+	  
 	public render(delta: number, camera: OrthographicCamera, sceneA: SceneA | SceneB, sceneB: SceneA | SceneB, renderer: WebGLRenderer, models: ThreeModels, transition: TransitionType) {
 		// Transition animation
+
 		if (transition.animate) {
 			//generate une nouvelle image avec les images de la scene A et B
 			if (transition.sceneWeAt == 0) {
@@ -44,6 +64,7 @@ export default class Transition {
 			sceneB.render(delta, false, transition);
 		} else {
 			// When 0<transition<1 render transition between two scenes
+			this.resize(models, camera, renderer);
 			sceneA.render(delta, true, transition);
 			sceneB.render(delta, true, transition);
 
