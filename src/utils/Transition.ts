@@ -39,7 +39,7 @@ export default class Transition {
 		// Prevent render both scenes when it's not necessary
 		if (transition.transition == 0) {
 			sceneA.render(delta, false, transition);
-1
+			// sceneB.render(delta, false, transition);
 		} else if (transition.transition == 1) {
 			sceneB.render(delta, false, transition);
 		} else {

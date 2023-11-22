@@ -93,8 +93,6 @@ export default class SceneB {
 					this.parameters.setAnime[9] = true;
 					transition.needScroll = true;
 				}
-				// models.water[1].material.uniforms['time'].value = elapsedTime / 2;
-				// (models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = elapsedTime;
 			},
 			(elapsedTime) => {
 				if (!this.tmp && !this.parameters.isOldTimeSet) {
@@ -146,6 +144,7 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
+					this.reset();// TMP
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setCam.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -157,7 +156,8 @@ export default class SceneB {
 					this.parameters.isOldTimeSet = true;
 				}
 				if (!this.animations.galaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.reactAreaLights, models, this.scene)) {
-					this.parameters.next();
+					// this.parameters.setAnime[9] = true;
+					transition.needScroll = true;
 				}
 				this.animations.cameraGalaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setCam, models.camera[1]);
 			},
@@ -227,7 +227,7 @@ export default class SceneB {
 		this.models.camera[1].lookAt(0, 0, 0);
 		this.models.camera[1].position.set(-5.14, -11.93, 12.39);
 		this.models.camera[1].rotation.set(0.706, -0.067, 0.056);
-		this.models.camera[1].far = 300;
+		this.models.camera[1].far = 3000;
 		this.models.camera[1].updateProjectionMatrix();
 
 		/* - Fonts - */

@@ -78,7 +78,7 @@ document.body.appendChild(stats.dom);
 /********************************************************************************/
 /* ----------------------------------- SCENES --------------------------------- */
 /********************************************************************************/
-const camera = new OrthographicCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 10, 10);
+const camera = new OrthographicCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, -10, 10);
 const gui = new GUI(); // TMP - Debug
 const scenes: { [key: string]: SceneA | SceneB } = {
 	sceneA: new SceneA(cloneThreeModels(models), renderer, gui),
@@ -93,7 +93,7 @@ window.addEventListener('wheel', function () {
 		transitionParams.animation++;
 
 		transitionParams.needScroll = false;
-		if (transitionParams.animation > 6) {
+		if (transitionParams.animation > 7) {
 			transitionParams.resetAnimation();
 		}
 	}
