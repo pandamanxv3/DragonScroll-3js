@@ -47,8 +47,8 @@ const transitionParams: TransitionType = {
 		this.animate = true;
 	},
 	resetAnimation: function () {
-		this.transitionBis = 0,
-			this.timerWater = 0;
+		this.transitionBis = 0;
+		this.timerWater = 0;
 		this.timerWater = 0;
 		this.animation = 0;
 		this.animate = false;
