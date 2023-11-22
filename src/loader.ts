@@ -1,4 +1,4 @@
-import { BackSide, BoxGeometry, BufferGeometry, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Points, PointsMaterial, RepeatWrapping, ShaderMaterial, Texture, TextureLoader, TorusGeometry, Vector2, Vector3 } from 'three'
+import { BackSide, BufferGeometry, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, Points, PointsMaterial, RepeatWrapping, ShaderMaterial, Texture, TextureLoader, TorusGeometry, Vector2, Vector3 } from 'three'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader'
@@ -475,14 +475,14 @@ export default async function Loader(): Promise<ThreeModels> {
 		}));
 		objects.dragonWireframe.scale.set(0.1, 0.1, 0.1);
 		
-		const positionDragonLenght: number = positionDragon.length / 10;
+		const positionDragonLenght: number = positionDragon.length / 5;
 		for (let i = 0; positionDragonLenght < positionDragon.length; i += 3) {
-			positionDragon.splice(i, 30);
+			positionDragon.splice(i, 12);
 		}
 		let particlesGeometry = new BufferGeometry().setAttribute('position', new Float32BufferAttribute(positionDragon, 3));
 		const particlesMaterial = new PointsMaterial({
 			color: 0xffffff,
-			size: 0.1,
+			size: 0.2,
 			sizeAttenuation: true
 		});
 		const particles = new Points(particlesGeometry, particlesMaterial);

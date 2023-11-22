@@ -24,6 +24,7 @@ export default class SceneB {
 	};
 	private models: ThreeModels;
 	private renderer: WebGLRenderer;
+	private tmp: boolean;
 
 	constructor(models: ThreeModels, renderer: WebGLRenderer, transition: Transition) {
 		const cameraListener = (event: MouseEvent) => this.animations.cameraAnimation(event, models.camera[1]);
@@ -50,7 +51,7 @@ export default class SceneB {
 				this.parameters.isOldTimeSet = false;
 				this.parameters.index++;
 				this.parameters.nextAnimation++;
-				if (this.parameters.index > 3) {
+				if (this.parameters.index > 4) {
 					this.parameters.index = 0;
 					this.parameters.oldTime = 0;
 					this.parameters.nextAnimation = 5;
@@ -58,6 +59,7 @@ export default class SceneB {
 				}
 			}
 		}
+		this.tmp = false;
 
 		this.animationFuncs = [
 			(elapsedTime) => {
@@ -71,7 +73,7 @@ export default class SceneB {
 						models.aureole[2],
 						models.water[0],
 						models.cube
-						);
+					);
 					this.reset();
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -88,13 +90,24 @@ export default class SceneB {
 				}
 
 				if (!this.animations.waterAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.ambientLight, models, transition) && !this.parameters.setAnime[9]) {
-					transition.needScroll = true,
-						this.parameters.setAnime[9] = true;
+					this.parameters.setAnime[9] = true;
+					transition.needScroll = true;
 				}
-				models.water[1].material.uniforms['time'].value = elapsedTime / 2;
-				(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = elapsedTime;
+				// models.water[1].material.uniforms['time'].value = elapsedTime / 2;
+				// (models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = elapsedTime;
 			},
 			(elapsedTime) => {
+				if (!this.tmp && !this.parameters.isOldTimeSet) {
+					this.parameters.oldTime = this.clock.getElapsedTime();
+					this.parameters.isOldTimeSet = true;
+				}
+				if (!this.tmp) {
+					if (!this.animations.transitionAnimation(elapsedTime - this.parameters.oldTime, this.models)) {
+						this.parameters.isOldTimeSet = false;
+						this.tmp = true;
+					}
+					return;
+				}
 				if (!this.parameters.isOldTimeSet) {
 					this.scene.remove(
 						this.ambientLight,
@@ -133,7 +146,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					// this.reset(); // TMP
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setCam.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -168,7 +180,7 @@ export default class SceneB {
 					this.parameters.oldTime = this.clock.getElapsedTime();
 					this.parameters.isOldTimeSet = true;
 				}
-				if (!this.animations.resetAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.scene, this.hemisphereLight, models)) {
+				if (!this.animations.resetAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.scene, this.ambientLight, this.hemisphereLight, models)) {
 					this.parameters.next();
 				}
 			}
@@ -255,7 +267,7 @@ export default class SceneB {
 		this.models.torus[1].rotation.x = Math.PI / 2;
 
 		this.models.cube.visible = false;
-	
+
 		/* - Models for reset - */
 		this.models.gate.scale.set(0.734, 1, 0.623);
 		this.models.gate.position.set(-0.39, 2.1, -1.42);

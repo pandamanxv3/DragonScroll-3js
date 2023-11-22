@@ -1,8 +1,9 @@
-import { Color, Euler, Material, MathUtils, Matrix4, MeshStandardMaterial, RectAreaLight, Vector3 } from 'three';
+import { Color, Euler, Material, MathUtils, Matrix4, MeshStandardMaterial, RectAreaLight, ShaderMaterial, Vector3 } from 'three';
 import { AnimationFunctionB } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 
 export default function initAnimationsB(): AnimationFunctionB {
+	let canMove: boolean = true;
 	const coor = new Vector3(0, 0, 0);
 	const direction = new Vector3(0, 0, 0);
 
@@ -99,7 +100,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 			color.g = totalG / rectAreas.length * 0.5;
 			color.b = totalB / rectAreas.length * 0.5;
 		},
-		gradient: (colorToChange: Color, time: number, transitionTime: number, index) => {
+		gradient: (colorToChange: Color, time: number, transitionTime: number, index: number) => {
 			let t = (time % transitionTime) / transitionTime;
 			if (color.gradientSet.change[index] && t < 0.99)
 				color.gradientSet.change[index] = false;
@@ -115,6 +116,8 @@ export default function initAnimationsB(): AnimationFunctionB {
 
 	return {
 		waterAnimation: (time, setAnime, ambientLight, models, transiParameters) => {
+			models.water[1].material.uniforms['time'].value = time / 2;
+			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
 			if (transiParameters.transition > 0.4 && !setAnime[6]) {
 				if (!setAnime[5]) {
 					transiParameters.timerParticules = time;
@@ -200,6 +203,13 @@ export default function initAnimationsB(): AnimationFunctionB {
 					}
 				}
 			}
+			return true;
+		},
+		transitionAnimation: (time, models) => {
+			models.water[1].material.uniforms['time'].value = time / 2;
+			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
+			if (time < 0.5) models.camera[1].rotation.x += 0.05;
+			else return false;
 			return true;
 		},
 		flashAnimation: (time, setAnime, rectAreaLights, models, scene) => {
@@ -327,12 +337,14 @@ export default function initAnimationsB(): AnimationFunctionB {
 			return true;
 		},
 		cameraAnimation: (event, camera) => {
+			canMove = false;
 			const cursor = {
 				x: event.clientX / window.innerWidth - 0.5,
 				y: event.clientY / window.innerHeight - 0.5
 			};
 			camera.rotation.x = -cursor.y;
 			camera.rotation.y = -cursor.x;
+			canMove = true;
 		},
 		cameraFlashAnimation: (time, setCam, models, funcListener) => {
 			let damping = 0.01;
@@ -397,6 +409,10 @@ export default function initAnimationsB(): AnimationFunctionB {
 				if (!setCam[8]) {
 					window.addEventListener('mousemove', funcListener);
 					setCam[8] = true;
+				}
+				if (canMove) {
+					models.camera[1].rotation.x += Math.sin(time) * 0.0005;
+					models.camera[1].rotation.y += Math.cos(time) * 0.001;
 				}
 				return false;
 			}
@@ -468,7 +484,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 							move.previousTime = time;
 							setAnime[2] = true;
 						}
-						move.toWoDampling(models.cube.position, models.camera[1].position, 0.00002);
+						move.toWoDampling(models.cube.position, models.camera[1].position, 0.00005);
 					}
 					if (time > 12.85) {
 						models.camera[1].far = 280 - 100 * (time - 12.85);
@@ -515,7 +531,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 				camera.lookAt(0, 0, 0);
 			}
 		},
-		resetAnimation: (time, setAnime, scene, light, models) => {
+		resetAnimation: (time, setAnime, scene, ambientLight, hemisphereLight, models) => {
 			if (!setAnime[0]) {
 				models.dragonUnBrokenNoSphere.position.set(-4.75, -0.58, -0.53);
 				models.dragonUnBrokenNoSphere.rotation.set(-0.711, -0.64, 0.010);
@@ -528,6 +544,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 				setAnime[0] = true;
 			}
 			if (time < 20) {
+				ambientLight.intensity = MathUtils.lerp(ambientLight.intensity, 0, 0.001);
 				models.camera[1].position.set(
 					MathUtils.lerp(models.camera[1].position.x, -11.668095624446837, 0.01),
 					MathUtils.lerp(models.camera[1].position.y, 7.0791641969833075, 0.01),
@@ -545,10 +562,12 @@ export default function initAnimationsB(): AnimationFunctionB {
 				);
 				models.camera[1].lookAt(models.dragonParticles.position);
 				models.cube.lookAt(models.camera[1].position);
-
-				if (time > 4.5) {
-					scene.background = models.backgroundTexture;
-					light.intensity = MathUtils.lerp(light.intensity, 0.8, 0.01);
+				if (time > 3) {
+					if (!setAnime[1]) {
+						scene.background = models.backgroundTexture;
+						setAnime[1] = true;
+					}
+					hemisphereLight.intensity = MathUtils.lerp(hemisphereLight.intensity, 0.8, 0.01);
 					models.water[0].position.y = MathUtils.lerp(models.water[0].position.y, -6, 0.01);
 					models.water[0].material.uniforms['time'].value = time / 2;
 				}
