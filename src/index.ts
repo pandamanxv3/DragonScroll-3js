@@ -4,8 +4,6 @@ import SceneA from './scenes/SceneA'
 import SceneB from './scenes/SceneB'
 import { ThreeModels, Transition as TransitionType } from './types'
 import TransitionClass from './utils/Transition'
-import Stats from 'three/examples/jsm/libs/stats.module.js'
-import GUI from 'three/examples/jsm/libs/lil-gui.module.min'
 import { cloneThreeModels } from './utils/cloneThreeModels'
 
 /********************************************************************************/
@@ -72,16 +70,13 @@ const renderer = new WebGLRenderer({ canvas: canvas!, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-const stats = new Stats;
-document.body.appendChild(stats.dom);
 
 /********************************************************************************/
 /* ----------------------------------- SCENES --------------------------------- */
 /********************************************************************************/
 const camera = new OrthographicCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, -10, 10);
-const gui = new GUI(); // TMP - Debug
 const scenes: { [key: string]: SceneA | SceneB } = {
-	sceneA: new SceneA(cloneThreeModels(models), renderer, gui),
+	sceneA: new SceneA(cloneThreeModels(models), renderer),
 	sceneB: new SceneB(cloneThreeModels(models), renderer, transitionParams)
 };
 
@@ -135,7 +130,6 @@ const transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, tra
 const clock = new Clock();
 function animate() {
 	transition.render(clock.getElapsedTime(), camera, scenes.sceneA, scenes.sceneB, renderer, models, transitionParams)
-	stats.update();
 	requestAnimationFrame(animate);
 }
 animate();

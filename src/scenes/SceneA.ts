@@ -1,7 +1,6 @@
 import { Scene, PerspectiveCamera, AmbientLight, HemisphereLight, WebGLRenderTarget, HalfFloatType, WebGLRenderer, Color } from 'three';
 import { AnimationFunctionA, ThreeModels, Transition } from '../types';
 import initAnimationsA from '../animations/animationA';
-import GUI from 'three/examples/jsm/libs/lil-gui.module.min';
 import './font.css';
 
 export default class SceneA {
@@ -18,7 +17,7 @@ export default class SceneA {
 	private textTitle: HTMLElement;
 	private textSubtitle: HTMLElement;
 
-	constructor(models: ThreeModels, renderer: WebGLRenderer, gui: GUI) {  // TMP - Debug
+	constructor(models: ThreeModels, renderer: WebGLRenderer) {  // TMP - Debug
 		this.ambientLight = new AmbientLight(0xfff0dd, 0.5);
 		this.hemisphereLight = new HemisphereLight(0xebdab7, 0x39305c, 0.8);
 		this.scene = new Scene;
@@ -45,15 +44,6 @@ export default class SceneA {
 		);
 
 		this.reset();
-		// TMP - Debug
-		const lightUI = gui.addFolder('Light');
-		const ambientLightUI = lightUI.addFolder('Ambient').close();
-		ambientLightUI.addColor(this.ambientLight, 'color');
-		ambientLightUI.add(this.ambientLight, 'intensity')
-			.min(0)
-			.max(10)
-			.step(0.1);
-		// ------------
 	}
 
 	public reset() {
