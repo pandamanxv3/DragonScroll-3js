@@ -3,8 +3,18 @@
 Welcome to Dragon3D! This project is an exploration into the realm of 3D animations using 3JS and TypeScript. As a student endeavor, it showcases our journey in learning and implementing modern web technologies to create an interactive experience.
 
 ## About the Project
+Dragon3D invites users to navigate through a series of scenes involving a dragon statue.  The website is a playground for experimenting with 3D models and animations, offering a simple yet engaging way to showcase our skills in web development and design.
 
-Dragon3D invites users to navigate through a series of scenes featuring a 3D dragon statue. The website is a playground for experimenting with 3D models and animations, offering a simple yet engaging way to showcase our skills in web development and design.
+## Screenshots
+
+### Home Screen
+![Home Screen](static/screenshot/Screenshot_titleScreen.png)
+
+### Scene Exploration
+![Map Selection](static/screenshot/Screenshot_inExperience1.png)
+
+![In-Game Experience](static/screenshot/Screenshot_inExperience2.png)
+
 
 ## Features
 
