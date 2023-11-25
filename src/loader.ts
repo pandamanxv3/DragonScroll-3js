@@ -73,6 +73,7 @@ materials.dragonUnbroken = new MeshStandardMaterial({
 materials.dragonBroken = new MeshStandardMaterial({
 	map: map,
 	aoMap: aoMap,
+	color: "#eafae8", // Remplacez 0xRRGGBB par la valeur hexadécimale de la couleur souhaitée
 	roughnessMap: roughnessMap,
 	normalMap: textures.dragonBroken.normalMap,
 	displacementMap: displacementMap,
@@ -81,6 +82,7 @@ materials.dragonBroken = new MeshStandardMaterial({
 
 materials.aureole = new MeshStandardMaterial({
 	map: map,
+	color: "#eafae8", // Remplacez 0xRRGGBB par la valeur hexadécimale de la couleur souhaitée
 	aoMap: aoMap,
 	normalMap: textures.aureole.normalMap,
 	displacementMap: displacementMap,
@@ -240,9 +242,9 @@ export default async function Loader(): Promise<ThreeModels> {
 				waterNormals: new TextureLoader().load('textures/waternormals.jpg', function (texture) {
 					texture.wrapS = texture.wrapT = RepeatWrapping;
 				}),
-				sunDirection: new Vector3,
-				sunColor: 0xffffff,
-				waterColor: 0x001e0f,
+				sunDirection: new Vector3(1,4,1),
+				// waterColor: 0xfcc7685,
+				sunColor: 0xd49479,
 				distortionScale: 2
 			});
 
@@ -253,10 +255,9 @@ export default async function Loader(): Promise<ThreeModels> {
 				waterNormals: new TextureLoader().load('textures/waternormals.jpg', function (texture) {
 					texture.wrapS = texture.wrapT = RepeatWrapping;
 				}),
-				sunDirection: new Vector3,
-				sunColor: 0xffffff,
-				waterColor: 0x001e0f,
-				distortionScale: 2
+				waterColor: 0x08555e,
+				sunColor: 0x432359,
+				distortionScale: 3
 			});
 		}
 

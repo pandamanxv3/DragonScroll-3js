@@ -3,6 +3,7 @@ import { AnimationFunctionB, ThreeModels, Transition } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 import initAnimationsB from '../animations/animationB'
 
+
 export default class SceneB {
 	public fbo: WebGLRenderTarget;
 
@@ -31,7 +32,7 @@ export default class SceneB {
 
 		this.clock = new Clock;
 		this.ambientLight = new AmbientLight(0xfff0dd, 0.5);
-		this.hemisphereLight = new HemisphereLight(0xebdab7, 0x39305c, 0.1);
+		// this.hemisphereLight = new HemisphereLight(0xebdab7, 0x39305c, 0.1);
 		this.reactAreaLights = [];
 		for (let i = 0; i < 9; i++) {
 			const light = new RectAreaLight('black', 0.0, 85, 85);
@@ -173,7 +174,7 @@ export default class SceneB {
 						models.aureole[0],
 						models.aureole[1],
 						models.aureole[2],
-						models.water[0],
+						models.water[1],
 					);
 					this.parameters.oldTime = this.clock.getElapsedTime();
 					this.parameters.isOldTimeSet = true;
@@ -189,8 +190,8 @@ export default class SceneB {
 	}
 
 	public reset() {
-		this.ambientLight.intensity = 0.5;
-		this.hemisphereLight.intensity = 0.1;
+		// this.ambientLight.intensity = 0.5;
+		// this.hemisphereLight.intensity = 0.1;
 		const positionLight = [
 			new Vector3(-150, 100, 0),
 			new Vector3(-200, 150, -150),
