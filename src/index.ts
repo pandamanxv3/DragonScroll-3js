@@ -47,18 +47,26 @@ const transitionParams: TransitionType = {
 		this.animate = true;
 	},
 	resetAnimation: function () {
-		this.transitionBis = 0;
-		this.timerWater = 0;
-		this.timerWater = 0;
-		this.animation = 0;
-		this.animate = false;
-		this.needScroll = true;
+		this.transition = 0,
+		this.transitionBis = 0,
+		this.animation = 0,
+		this.timerParticules = 0,
+		this.timerWater = 0,
+		this.scrollPercentage = 0.02,
+		this.sceneWeAt = 0,
+		this.distance = 0, // a checker !
+		this.animate = false,
+		this.scrollForTransition = false,
+		this.needScroll = true,
 		this.animations_transiA = [
 			false,
 			false,
 			false,
-		];
-		scenes.sceneA.reset();
+			false,
+		],
+		scenes.sceneA = new SceneA(cloneThreeModels(models), renderer, gui);
+		scenes.sceneB = new SceneB(cloneThreeModels(models), renderer, transitionParams);
+		transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, transitionParams);
 	},
 };
 
@@ -93,7 +101,7 @@ window.addEventListener('wheel', function () {
 		transitionParams.animation++;
 
 		transitionParams.needScroll = false;
-		if (transitionParams.animation > 7) {
+		if (transitionParams.animation > 8) {
 			transitionParams.resetAnimation();
 		}
 	}
@@ -131,7 +139,7 @@ window.addEventListener('resize', () => {
 })
 
 /********************************************************************************/
-const transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, transitionParams);
+let transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, transitionParams);
 const clock = new Clock();
 function animate() {
 	transition.render(clock.getElapsedTime(), camera, scenes.sceneA, scenes.sceneB, renderer, models, transitionParams)

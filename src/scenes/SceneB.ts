@@ -51,11 +51,11 @@ export default class SceneB {
 				this.parameters.isOldTimeSet = false;
 				this.parameters.index++;
 				this.parameters.nextAnimation++;
-				if (this.parameters.index > 4) {
+				if (this.parameters.index > 3) {
 					this.parameters.index = 0;
 					this.parameters.oldTime = 0;
 					this.parameters.nextAnimation = 5;
-					transition.sceneToScene();
+					transition.resetAnimation();
 				}
 			}
 		}
@@ -144,7 +144,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					this.reset();// TMP
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setCam.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -156,7 +155,6 @@ export default class SceneB {
 					this.parameters.isOldTimeSet = true;
 				}
 				if (!this.animations.galaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.reactAreaLights, models, this.scene)) {
-					// this.parameters.setAnime[9] = true;
 					transition.needScroll = true;
 				}
 				this.animations.cameraGalaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setCam, models.camera[1]);
@@ -291,8 +289,9 @@ export default class SceneB {
 	public render(_, rtt: boolean, transition: Transition) {
 		const elapsedTime = this.clock.getElapsedTime();
 		this.animationFuncs[this.parameters.index](elapsedTime);
-		if (transition.sceneWeAt == 1)
-			this.nextAnim(transition);
+		if (transition.sceneWeAt == 1 && transition.animation != 8 && transition.animation == this.parameters.nextAnimation) {
+			this.parameters.next();
+		}
 		this.renderer.setClearColor('black');
 
 		if (rtt) {
@@ -306,8 +305,4 @@ export default class SceneB {
 		}
 	}
 
-	private nextAnim(transition: Transition): void {
-		if (transition.animation == this.parameters.nextAnimation)
-			this.parameters.next();
-	}
 }

@@ -2,6 +2,7 @@ import { Color, Euler, Material, MathUtils, Matrix4, MeshStandardMaterial, RectA
 import { AnimationFunctionB } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import '../scenes/font.css'
+import gsap from 'gsap'
 
 export default function initAnimationsB(): AnimationFunctionB {
 	let canMove: boolean = true;
@@ -217,11 +218,11 @@ export default function initAnimationsB(): AnimationFunctionB {
 			return true;
 		},
 		flashAnimation: (time, setAnime, rectAreaLights, models, scene) => {
-			
+
 			models.torus[0].rotation.z = time * 0.1;
 			models.torus[1].rotation.z = -time * 0.1;
 			if (time < 1) {
-				
+
 				models.textTitle.style.animation = 'fadeIn 0.5s forwards';
 				models.textTitle.style.display = 'block';
 				color.on(rectAreaLights[0], color.white, 0.1);
@@ -492,15 +493,15 @@ export default function initAnimationsB(): AnimationFunctionB {
 					if (time > 11.85) {
 						if (!setAnime[2]) {
 							models.cube.lookAt(models.camera[1].position);
-							models.cube.position.set(models.camera[1].position.x * -1.8, models.camera[1].position.y * -1.8, models.camera[1].position.z * -1.8);
+							models.cube.position.set(models.camera[1].position.x * -18, models.camera[1].position.y * -18, models.camera[1].position.z * -18);
 							models.cube.visible = true;
 							move.previousTime = time;
 							setAnime[2] = true;
 						}
-						move.toWoDampling(models.cube.position, models.camera[1].position, 0.00005);
+						move.toWoDampling(models.cube.position, models.camera[1].position, 0.0005);
 					}
 					if (time > 12.85) {
-						models.camera[1].far = 2800 - 1000 * (time - 128.5);
+						models.camera[1].far = 2800 - 1000 * (time - 12.85);
 						models.camera[1].updateProjectionMatrix();
 					}
 				} else {
@@ -511,8 +512,16 @@ export default function initAnimationsB(): AnimationFunctionB {
 						models.cube.position.set(0, 0, 0);
 						models.cube.rotation.set(0, 0, 0);
 						setAnime[3] = true;
+						gsap.fromTo(
+							models.fontB[0],
+							{ x: 700, y: -250, z: 0 },
+							{
+								x: -20, y: 0, z: -100,
+								duration: 1
+							}
+						);
 					}
-					models.cube.position.z = (time * 12) % 10;
+					models.cube.position.z = (time * 120) % 100;
 					if (time < 15.15) { return true; }
 					else { return false; }
 				}
@@ -546,46 +555,104 @@ export default function initAnimationsB(): AnimationFunctionB {
 		},
 		resetAnimation: (time, setAnime, scene, ambientLight, hemisphereLight, models) => {
 			if (!setAnime[0]) {
-				models.dragonUnBrokenNoSphere.position.set(-4.75, -0.58, -0.53);
+				// models.dragonUnBrokenNoSphere.position.set(-4.75, -0.58, -0.53);
 				models.dragonUnBrokenNoSphere.rotation.set(-0.711, -0.64, 0.010);
 				models.dragonUnBrokenNoSphere.scale.set(2, 2, 2);
 				models.dragonUnBrokenNoSphere.visible = true;
 				models.water[0].rotation.x = -Math.PI / 2;
-				models.water[0].position.y = -50;
+				// models.water[0].position.y = -50;
 
-				models.dragonParticles.position.copy(models.cube.position);
+				models.camera[1].position.set(-11.66809562444683, 7.0791641969833075, 27.986620027884758);
+				models.camera[1].lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
+				models.cube.position.set(-11.66809562444683, 7.0791641969833075, 27.986620027884758);
+				models.cube.lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
 				setAnime[0] = true;
 			}
-			if (time < 20) {
-				ambientLight.intensity = MathUtils.lerp(ambientLight.intensity, 0, 0.001);
-				models.camera[1].position.set(
-					MathUtils.lerp(models.camera[1].position.x, -11.668095624446837, 0.01),
-					MathUtils.lerp(models.camera[1].position.y, 7.0791641969833075, 0.01),
-					MathUtils.lerp(models.camera[1].position.z, 27.986620027884758, 0.01)
-				);
-				models.dragonParticles.position.set(
-					MathUtils.lerp(models.dragonParticles.position.x, 8.49699361604131276, 0.01),
-					MathUtils.lerp(models.dragonParticles.position.y, -0.2164219053147923, 0.01),
-					MathUtils.lerp(models.dragonParticles.position.z, -0.8403326154054094, 0.01)
-				);
-				// models.cube.position.set(
-				// 	MathUtils.lerp(models.cube.position.x, 0, 0.01),
-				// 	MathUtils.lerp(models.cube.position.y, -10, 0.01),
-				// 	MathUtils.lerp(models.cube.position.z, 0, 0.01)
-				// );
-				models.camera[1].lookAt(models.dragonParticles.position);
-				models.cube.lookAt(models.camera[1].position);
-				if (time > 3) {
-					if (!setAnime[1]) {
-						scene.background = models.backgroundTexture;
-						setAnime[1] = true;
+			if (!setAnime[1]) {
+				gsap.to(
+					models.cube.position,
+					{
+						x: 700, y: -250, z: -100,
+						onUpdate: () => models.cube.lookAt(models.camera[1].position),
+						duration: 6
 					}
-					hemisphereLight.intensity = MathUtils.lerp(hemisphereLight.intensity, 0.8, 0.01);
-					models.water[0].position.y = MathUtils.lerp(models.water[0].position.y, -6, 0.01);
-					models.water[0].material.uniforms['time'].value = time / 2;
-				}
-				return true;
+				);
+				/* **************************** */
+				gsap.fromTo(
+					models.dragonSphere.position,
+					{ x: -50, y: 0, z: 0 },
+					{
+						x: 0, y: 0, z: 0,
+						duration: 2,
+						ease: "circ.out",
+					}
+				);
+				/* **************************** */
+				gsap.fromTo(
+					models.dragonUnBrokenNoSphere.position,
+					{ x: -54.75, y: 0, z: 0 },
+					{
+						x: -4.75, y: -0.58, z: -0.53,
+						delay: 0.5,
+						duration: 2,
+						ease: "circ.out",
+					}
+				);
+				/* **************************** */
+				gsap.fromTo(
+					models.gate.position,
+					{ x: -50, y: 0, z: 0 },
+					{
+						x: -0.39, y: 2.1, z: -1.42,
+						delay: 1,
+						duration: 2,
+						ease: "circ.out",
+					}
+				);
+				/* **************************** */
+				gsap.fromTo(
+					models.aureole[0].position,
+					{ x: -50, y: 0, z: 0 },
+					{
+						x: 0, y: 0, z: -25,
+						delay: 1.5,
+						duration: 2,
+						ease: "circ.out",
+					}
+				);
+				gsap.fromTo(
+					models.aureole[1].position,
+					{ x: -50, y: 0, z: 0 },
+					{
+						x: 0, y: 0, z: -25,
+						delay: 1.75,
+						duration: 2,
+						ease: "circ.out",
+					}
+				);
+				gsap.fromTo(
+					models.aureole[2].position,
+					{ x: -50, y: 0, z: 0 },
+					{
+						x: 0, y: 0, z: -25,
+						delay: 2,
+						duration: 2,
+						ease: "circ.out",
+					}
+				);
+				gsap.fromTo(
+					models.water[0].position,
+					{ z: -50 },
+					{
+						z: -6,
+						delay: 1,
+						duration: 2,
+						ease: "circ.out",
+					}
+				)
+				setAnime[1] = true;
 			}
+			if (time < 8) return true;
 			return false;
 		}
 	};
