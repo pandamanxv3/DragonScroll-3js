@@ -548,6 +548,8 @@ export default function initAnimationsB(): AnimationFunctionB {
 		},
 		resetSphereAnimation: (time, setAnime, ambientLight, hemisphereLight, models) => {
 			if (!setAnime[0]) {
+				ambientLight.intensity = 0;
+				hemisphereLight.intensity = 0.1;
 				gsap.to(ambientLight, { intensity: 0.07, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.2, duration: 2, ease: "none" });
 				gsap.fromTo(

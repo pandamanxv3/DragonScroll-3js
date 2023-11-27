@@ -66,7 +66,7 @@ export default class SceneB {
 		const cubeInfiniAnimate = gsap.to(
 			models.cube.position,
 			{
-				x: -27, y: 12.6, z: 50,
+				x: -27.06, y: 12.65, z: 50,
 				onUpdate: () => models.cube.lookAt(models.camera[1].position),
 				duration: 2,
 				repeat: -1,
@@ -175,16 +175,14 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					models.cube.visible = false;
 					console.log('sphere');
 					this.scene.remove(models.dragonParticles);
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 
-					this.ambientLight.intensity = 0;
 					models.camera[1].position.set(-11.66809562444683, 7.0791641969833075, 27.986620027884758);
 					models.camera[1].lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
-					models.cube.position.set(-11.66809562444683, 7.0791641969833075, 27.986620027884758);
+					models.cube.position.set(-12.2293533424705, 7.28222325407887, 28.7889645880896);
 					models.cube.lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
 					cubeInfiniAnimate.play();
 					this.scene.add(
