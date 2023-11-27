@@ -12,7 +12,11 @@ export type AnimationFunctionB = {
 	cameraFlashAnimation: (time: number, setCam: boolean[], models: ThreeModels, funcListener: (event: MouseEvent) => void) => boolean,
 	galaxyAnimation: (time: number, setAnime: boolean[], reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[], models: ThreeModels, scene: Scene) => boolean,
 	cameraGalaxyAnimation: (time: number, setCam: boolean[], camera: PerspectiveCamera) => void,
-	resetAnimation: (time: number, setAnime: boolean[], scene: Scene, ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean
+	resetSphereAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean,
+	resetDragonAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean,
+	resetGateAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean,
+	resetAureoleAnimation: ((time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean)[],
+	resetWaterAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean
 }
 
 export type ThreeModels = {
@@ -54,10 +58,10 @@ export type Transition = {
 	timerWater: number,
 	scrollPercentage: number,
 	sceneWeAt: number,
-	distance: number, // a checker !
 	animate: boolean,
 	scrollForTransition: boolean,
 	needScroll: boolean,
+	waitScroll: boolean,
 	animations_transiA: [boolean, boolean, boolean, boolean],
 	myTween?: Tween<Transition>,
 	myTweenBack?: Tween<Transition>,

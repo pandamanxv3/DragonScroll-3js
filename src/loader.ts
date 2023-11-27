@@ -365,7 +365,7 @@ export default async function Loader(): Promise<ThreeModels> {
 		// 		side: BackSide
 		// 	})
 		// );
-		const sideGeometry = new PlaneGeometry(1, 1, 1, 100);
+		const sideGeometry = new PlaneGeometry(1, 1, 1, 160);
 		const sideMaterial = new MeshBasicMaterial({
 			color: 0xff0000,
 			wireframe: true,
@@ -377,18 +377,18 @@ export default async function Loader(): Promise<ThreeModels> {
 			new Mesh(sideGeometry, sideMaterial),
 			new Mesh(sideGeometry, sideMaterial)
 		];
-		sides[0].position.set(0, 25.5, 0);
+		sides[0].position.set(0, 1, 0);
 		sides[0].rotation.set(Math.PI / 2, 0, 0);
-		sides[0].scale.set(80, 2000, 1);
-		sides[1].position.set(40, 0, 0);
+		sides[0].scale.set(3.2, 200, 1);
+		sides[1].position.set(1.6, 0, 0);
 		sides[1].rotation.set(Math.PI / 2, -Math.PI / 2, 0);
-		sides[1].scale.set(51.0, 2000, 1);
-		sides[2].position.set(0, -25.5, 0);
+		sides[1].scale.set(2, 200, 1);
+		sides[2].position.set(0, -1, 0);
 		sides[2].rotation.set(-Math.PI / 2, 0, 0);
-		sides[2].scale.set(80, 2000, 1);
-		sides[3].position.set(-40, 0, 0);
+		sides[2].scale.set(3.2, 200, 1);
+		sides[3].position.set(-1.6, 0, 0);
 		sides[3].rotation.set(Math.PI / 2, Math.PI / 2, 0);
-		sides[3].scale.set(51.0, 2000, 1);
+		sides[3].scale.set(2, 200, 1);
 		objects.cube = new Group;
 		objects.cube.add(
 			sides[0],

@@ -23,10 +23,10 @@ const transitionParams: TransitionType = {
 	timerWater: 0,
 	scrollPercentage: 0.02,
 	sceneWeAt: 0,
-	distance: 0, // a checker !
 	animate: false,
 	scrollForTransition: false,
 	needScroll: true,
+	waitScroll: false,
 	animations_transiA: [
 		false,
 		false,
@@ -46,23 +46,22 @@ const transitionParams: TransitionType = {
 	},
 	resetAnimation: function () {
 		this.transition = 0,
-		this.transitionBis = 0,
-		this.animation = 0,
-		this.timerParticules = 0,
-		this.timerWater = 0,
-		this.scrollPercentage = 0.02,
-		this.sceneWeAt = 0,
-		this.distance = 0, // a checker !
-		this.animate = false,
-		this.scrollForTransition = false,
-		this.needScroll = true,
-		this.animations_transiA = [
-			false,
-			false,
-			false,
-			false,
-		],
-		scenes.sceneA = new SceneA(cloneThreeModels(models), renderer, gui);
+			this.transitionBis = 0,
+			this.animation = 0,
+			this.timerParticules = 0,
+			this.timerWater = 0,
+			this.scrollPercentage = 0.02,
+			this.sceneWeAt = 0,
+			this.animate = false,
+			this.scrollForTransition = false,
+			this.needScroll = true,
+			this.animations_transiA = [
+				false,
+				false,
+				false,
+				false,
+			],
+			scenes.sceneA = new SceneA(cloneThreeModels(models), renderer);
 		scenes.sceneB = new SceneB(cloneThreeModels(models), renderer, transitionParams);
 		transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, transitionParams);
 	},
@@ -92,11 +91,12 @@ const scenes: { [key: string]: SceneA | SceneB } = {
 /* ----------------------------------- EVENTS --------------------------------- */
 /********************************************************************************/
 window.addEventListener('wheel', function () {
-	if (transitionParams.needScroll) {
+	if (!transitionParams.waitScroll && transitionParams.needScroll) {
+		transitionParams.waitScroll = true;
+		this.setTimeout(() => {transitionParams.waitScroll = false}, 2000);
 		transitionParams.animation++;
-
 		transitionParams.needScroll = false;
-		if (transitionParams.animation > 8) {
+		if (transitionParams.animation > 14) {
 			transitionParams.resetAnimation();
 		}
 	}
@@ -127,7 +127,6 @@ window.addEventListener('resize', () => {
 	camera.updateProjectionMatrix();
 
 	(models.backgroundShader.material as ShaderMaterial).uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
-	// (models.planeShader.geometry as PlaneGeometry).verticesNeedUpdate = true;
 
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -136,6 +135,18 @@ window.addEventListener('resize', () => {
 /********************************************************************************/
 let transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, transitionParams);
 const clock = new Clock();
+// DEBUG
+transitionParams.animate = false;
+transitionParams.animation = 6;
+transitionParams.animations_transiA = [true, true, true, false];
+transitionParams.needScroll = false;
+transitionParams.scrollForTransition = false;
+transitionParams.scrollPercentage = 0.02;
+transitionParams.timerParticules = 0.42179999998211887;
+transitionParams.timerWater = 0.8587999999821184;
+transitionParams.transition = 1;
+transitionParams.transitionBis = 0.8400000000000004;
+// ******************************
 function animate() {
 	transition.render(clock.getElapsedTime(), camera, scenes.sceneA, scenes.sceneB, renderer, models, transitionParams)
 	requestAnimationFrame(animate);
