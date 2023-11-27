@@ -137,7 +137,7 @@ let transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, trans
 const clock = new Clock();
 // DEBUG
 transitionParams.animate = false;
-transitionParams.animation = 6;
+transitionParams.animation = 7;
 transitionParams.animations_transiA = [true, true, true, false];
 transitionParams.needScroll = false;
 transitionParams.scrollForTransition = false;

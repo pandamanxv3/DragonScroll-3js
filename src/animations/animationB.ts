@@ -210,7 +210,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 		transitionAnimation: (time, models) => {
 			models.water[1].material.uniforms['time'].value = time / 2;
 			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
-			if (time < 1) {
+			if (time < 0) {
 				// models.camera[1].rotation.x += 0.05;
 				models.camera[1].position.y += 0.02;
 			}
@@ -221,7 +221,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 
 			models.torus[0].rotation.z = time * 0.1;
 			models.torus[1].rotation.z = -time * 0.1;
-			if (time < 1) {
+			if (time < 0) {
 
 				models.textTitle.style.animation = 'fadeIn 0.5s forwards';
 				models.textTitle.style.display = 'block';
@@ -633,11 +633,30 @@ export default function initAnimationsB(): AnimationFunctionB {
 			}
 		],
 		resetWaterAnimation: (time, setAnime, ambientLight, hemisphereLight, models) => {
+			function triggerFadeOut() {
+				const overlay = document.getElementById('fade-overlay');
+				if (overlay) {
+				  overlay.style.opacity = '1'; // Commence le fondu
+			  
+				  // Tu peux ajouter un délai ici avant de changer de scène ou de réinitialiser l'opacité
+				  setTimeout(() => {
+					// Réinitialiser l'opacité pour une utilisation ultérieure, ou naviguer vers une nouvelle scène
+					overlay.style.opacity = '0';
+				  }, 3000); // Assure-toi que ce délai correspond à la durée de la transition CSS
+				}
+			  }
+
+			  function startFadeOutProcess() {
+				setTimeout(triggerFadeOut, 500); // Déclenche triggerFadeOut après 2 secondes
+			  }
+			  
 			if (!setAnime[0]) {
+				startFadeOutProcess();
 				gsap.to(ambientLight, { intensity: 0.5, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.8, duration: 2, ease: "none" });
 				setAnime[0] = true;
 			}
+
 			models.water[0].position.y = MathUtils.lerp(models.water[0].position.y, -6, 0.02);
 			models.water[0].material.uniforms['time'].value = time / 2;
 			if (time < 3) return true;

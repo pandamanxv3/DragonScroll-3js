@@ -43,9 +43,9 @@ export default class SceneB {
 		this.scene = new Scene;
 		this.animations = initAnimationsB();
 		this.parameters = {
-			index: 2, // DEBUG
+			index: 3, // DEBUG
 			oldTime: 0,
-			nextAnimation: 5 + 2, // DEBUG
+			nextAnimation: 5 + 3, // DEBUG
 			isOldTimeSet: false,
 			setAnime: [false, false, false, false, false, false, false, false, false, false],
 			setCam: [false, false, false, false, false, false, false, false, false, false],
@@ -157,7 +157,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					this.reset(); // DEBUG
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -175,6 +174,7 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
+					this.reset(); // DEBUG
 					models.cube.visible = false;
 					console.log('sphere');
 					this.scene.remove(models.dragonParticles);
@@ -188,6 +188,7 @@ export default class SceneB {
 					models.cube.lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
 					cubeInfiniAnimate.play();
 					this.scene.add(
+						models.cube, // DEBUG
 						this.ambientLight,
 						this.hemisphereLight,
 						models.dragonSphere
