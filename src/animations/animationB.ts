@@ -3,11 +3,61 @@ import { AnimationFunctionB } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import '../scenes/font.css'
 import gsap from 'gsap'
+import { on } from 'events';
+import { start } from 'repl';
+
+
 
 export default function initAnimationsB(): AnimationFunctionB {
 	let canMove: boolean = true;
 	const coor = new Vector3(0, 0, 0);
 	const direction = new Vector3(0, 0, 0);
+
+	function startGlitchEffect(obj, duration = 0.1, intensity = 0.1, delay = 0, rotation = true) {
+		console.log("startGlitchEffect");
+		// Sauvegarde des positions et rotations initiales
+		const initialPosition = obj.position.clone();
+		const initialRotation = obj.rotation.clone();
+
+		const glitch = () => {
+			// Réinitialise à la position et rotation initiales
+			//ICI!!!
+			obj.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
+			// Applique le glitch
+			gsap.to(obj.position, {
+				x: obj.position.x + Math.random() * intensity - intensity / 2,
+				y: obj.position.y + Math.random() * intensity - intensity / 2,
+				z: obj.position.z + Math.random() * intensity - intensity / 2,
+				duration: duration,
+				ease: "none",
+				onComplete: () => {
+					obj.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
+					setTimeout(glitch, (delay * 1000 + ((Math.random() - 0.5) * delay * 1000 * 2)));
+				}
+
+			});
+			if (rotation) {
+				gsap.to(obj.rotation, {
+					x: obj.rotation.x + Math.random() * (intensity * 2) - intensity,
+					y: obj.rotation.y + Math.random() * (intensity * 2) - intensity,
+					z: obj.rotation.z + Math.random() * (intensity * 2) - intensity,
+					duration: duration,
+					ease: "none",
+					onComplete: () => {
+						obj.rotation.set(initialRotation.x, initialRotation.y, initialRotation.z);
+					}
+				});
+
+			}
+		};
+
+		glitch(); // Démarre l'effet
+	}
+
+	function stopGlitchEffect(obj) {
+		gsap.killTweensOf(obj.position);
+		gsap.killTweensOf(obj.rotation);
+	}
 
 	const move = {
 		end: new Euler(0, 0, 0, 'XYZ'),
@@ -224,13 +274,15 @@ export default function initAnimationsB(): AnimationFunctionB {
 			if (time < 0) {
 
 				models.textTitle.style.animation = 'fadeIn 0.5s forwards';
-				models.textTitle.style.display = 'block';
+				models.textTitle.style.visibility = 'visible';
 				color.on(rectAreaLights[0], color.white, 0.1);
 				color.on(rectAreaLights[2], color.white, 0.1);
 				models.textTitle.style.animation = 'fadeOut 0.4s 2.9s forwards';
-				models.textTitle.addEventListener('animationend', () => {
-					models.textTitle.style.display = 'none';
-				});
+				const handleAnimationEnd = () => {
+					models.textTitle.style.visibility = 'hidden';
+					models.textTitle.removeEventListener('animationend', handleAnimationEnd);
+				}
+				models.textTitle.addEventListener('animationend', handleAnimationEnd);
 			} else if (time < 3.5) {
 				color.off(rectAreaLights[0], color.white, 0.1);
 				color.off(rectAreaLights[2], color.white, 0.1);
@@ -550,42 +602,56 @@ export default function initAnimationsB(): AnimationFunctionB {
 			if (!setAnime[0]) {
 				gsap.to(ambientLight, { intensity: 0.07, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.2, duration: 2, ease: "none" });
-				gsap.fromTo(
+				gsap.to(
 					models.dragonSphere.position,
-					{ x: -30, y: 0, z: 0 },
+					{ x: 0, y: 0, z: 0, duration: 2, ease: "none" }
+				);
+				gsap.to(
+					models.dragonSphere.rotation,
 					{ x: 0, y: 0, z: 0, duration: 2, ease: "none" }
 				);
 				setAnime[0] = true;
 			}
-			if (time < 3) return true;
+			if (time < 2) return true;
 			return false;
 		},
 		resetDragonAnimation: (time, setAnime, ambientLight, hemisphereLight, models) => {
 			if (!setAnime[0]) {
 				gsap.to(ambientLight, { intensity: 0.14, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.3, duration: 2, ease: "none" });
-				gsap.fromTo(
+				gsap.to(
 					models.dragonUnBrokenNoSphere.position,
-					{ x: -34.75, y: 0, z: 0 },
 					{ x: -4.75, y: -0.58, z: -0.53, duration: 2, ease: "none" }
+				);
+				gsap.to(
+					models.dragonUnBrokenNoSphere.rotation,
+					{ x: -0.711, y: -0.64, z: 0.010, duration: 2, ease: "none" }
 				);
 				setAnime[0] = true;
 			}
-			if (time < 3) return true;
+			if (time < 2) return true;
 			return false;
 		},
 		resetGateAnimation: (time, setAnime, ambientLight, hemisphereLight, models) => {
 			if (!setAnime[0]) {
+				startGlitchEffect(models.dragonSphere, 0.5, 0.4);
 				gsap.to(ambientLight, { intensity: 0.21, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.4, duration: 2, ease: "none" });
-				gsap.fromTo(
+				gsap.to(
 					models.gate.position,
-					{ x: -50, y: 0, z: 0 },
 					{ x: -0.39, y: 2.1, z: -1.42, duration: 2, ease: "none" }
 				);
 				setAnime[0] = true;
+				gsap.to(
+					models.gate.rotation,
+					{
+						x: 0, y: 0, z: 0, duration: 2, ease: "none", onComplete: () => {
+							startGlitchEffect(models.gate, 0.1, 5, 1.2, false);
+						}
+					}
+				);
 			}
-			if (time < 3) return true;
+			if (time < 2) return true;
 			return false;
 		},
 		resetAureoleAnimation: [
@@ -593,42 +659,67 @@ export default function initAnimationsB(): AnimationFunctionB {
 				if (!setAnime[0]) {
 					gsap.to(ambientLight, { intensity: 0.28, duration: 2, ease: "none" });
 					gsap.to(hemisphereLight, { intensity: 0.5, duration: 2, ease: "none" });
-					gsap.fromTo(
+					gsap.to(
 						models.aureole[0].position,
-						{ x: -50, y: 0, z: 0 },
-						{ x: 0, y: 0, z: -25, duration: 2, ease: "none" }
+						{
+							x: 0, y: 0, z: -25, duration: 2, ease: "none",
+							onComplete: () => {
+								gsap.to(
+									models.aureole[0].rotation,
+									{ x: 0, y: 0, z: 0, duration: 2, ease: "none" }
+
+								);
+							}
+						}
+					);
+					gsap.to(
+						models.aureole[0].rotation,
+						{ x: 0, y: 0, z: 0, duration: 2, ease: "none" }
 					);
 					setAnime[0] = true;
 				}
-				if (time < 3) return true;
+				if (time < 2) return true;
 				return false;
 			},
 			(time, setAnime, ambientLight, hemisphereLight, models) => {
 				if (!setAnime[0]) {
+					startGlitchEffect(models.dragonUnBrokenNoSphere, 0.1, 3, 3);
 					gsap.to(ambientLight, { intensity: 0.35, duration: 2, ease: "none" });
 					gsap.to(hemisphereLight, { intensity: 0.6, duration: 2, ease: "none" });
-					gsap.fromTo(
+					gsap.to(
 						models.aureole[1].position,
-						{ x: -50, y: 0, z: 0 },
 						{ x: 0, y: 0, z: -25, duration: 2, ease: "none" }
 					);
+					gsap.to(
+						models.aureole[1].rotation,
+						{
+							x: 0, y: 0, z: 0, duration: 2, ease: "none",
+							onComplete: () => {
+								startGlitchEffect(models.aureole[1], 0.1);
+							}
+						}
+					);
+
 					setAnime[0] = true;
 				}
-				if (time < 3) return true;
+				if (time < 2) return true;
 				return false;
 			},
 			(time, setAnime, ambientLight, hemisphereLight, models) => {
 				if (!setAnime[0]) {
 					gsap.to(ambientLight, { intensity: 0.42, duration: 2, ease: "none" });
 					gsap.to(hemisphereLight, { intensity: 0.7, duration: 2, ease: "none" });
-					gsap.fromTo(
+					gsap.to(
 						models.aureole[2].position,
-						{ x: -50, y: 0, z: 0 },
 						{ x: 0, y: 0, z: -25, duration: 2, ease: "none" }
+					);
+					gsap.to(
+						models.aureole[2].rotation,
+						{ x: 0, y: 0, z: 0, duration: 2, ease: "none" }
 					);
 					setAnime[0] = true;
 				}
-				if (time < 3) return true;
+				if (time < 2) return true;
 				return false;
 			}
 		],
@@ -636,20 +727,27 @@ export default function initAnimationsB(): AnimationFunctionB {
 			function triggerFadeOut() {
 				const overlay = document.getElementById('fade-overlay');
 				if (overlay) {
-				  overlay.style.opacity = '1'; // Commence le fondu
-			  
-				  // Tu peux ajouter un délai ici avant de changer de scène ou de réinitialiser l'opacité
-				  setTimeout(() => {
-					// Réinitialiser l'opacité pour une utilisation ultérieure, ou naviguer vers une nouvelle scène
-					overlay.style.opacity = '0';
-				  }, 3000); // Assure-toi que ce délai correspond à la durée de la transition CSS
-				}
-			  }
+					overlay.style.opacity = '1'; // Commence le fondu
 
-			  function startFadeOutProcess() {
-				setTimeout(triggerFadeOut, 500); // Déclenche triggerFadeOut après 2 secondes
-			  }
-			  
+					// Tu peux ajouter un délai ici avant de changer de scène ou de réinitialiser l'opacité
+					setTimeout(() => {
+						// Réinitialiser l'opacité pour une utilisation ultérieure, ou naviguer vers une nouvelle scène
+						overlay.style.opacity = '0';
+					}, 2500); // Assure-toi que ce délai correspond à la durée de la transition CSS
+				}
+			}
+
+			function stopGlitchEffectHandler() {
+				stopGlitchEffect(models.dragonUnBrokenNoSphere);
+				stopGlitchEffect(models.dragonSphere);
+				stopGlitchEffect(models.gate);
+				stopGlitchEffect(models.aureole[0]);
+			}
+			function startFadeOutProcess() {
+				setTimeout(triggerFadeOut, 1000); // Déclenche triggerFadeOut après 2 secondes
+				setTimeout(stopGlitchEffectHandler, 1000); // Déclenche stopGlitchEffect après 2 secondes
+			}
+
 			if (!setAnime[0]) {
 				startFadeOutProcess();
 				gsap.to(ambientLight, { intensity: 0.5, duration: 2, ease: "none" });

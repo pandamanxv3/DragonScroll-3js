@@ -44,15 +44,25 @@ export default function initAnimationA(): AnimationFunctionA[] {
 			models.textSubtitle.style.opacity = '0';
 			models.textSubtitle.style.animation = 'fadeOutSub 1s forwards';
 			models.creditText.style.animation = 'fadeOut 1s forwards';
-			
-			models.textSubtitle.addEventListener('animationend', () => {
-				models.textSubtitle.style.animation = '';
-			});
-			
-			models.textTitle.addEventListener('animationend', () => {
-				models.textTitle.style.display = 'none';
-				models.creditText.style.display = 'none';
-			});
+
+			const HandleAnimationEnd = () => {
+				models.textTitle.style.visibility = 'hidden';
+				models.textTitle.removeEventListener('animationend', HandleAnimationEnd);
+			}
+
+			const HandleAnimationEndSub = () => {
+				models.textSubtitle.style.visibility = 'hidden';
+				models.textSubtitle.removeEventListener('animationend', HandleAnimationEndSub);
+			}
+
+			const HandleAnimationEndCredit = () => {
+				models.creditText.style.visibility = 'hidden';
+				models.creditText.removeEventListener('animationend', HandleAnimationEndCredit);
+			}
+
+			models.textSubtitle.addEventListener('animationend', HandleAnimationEndSub);
+			models.textTitle.addEventListener('animationend', HandleAnimationEnd);
+			models.creditText.addEventListener('animationend', HandleAnimationEndCredit);
 
 			timer = elapsedTime;
 			//camera

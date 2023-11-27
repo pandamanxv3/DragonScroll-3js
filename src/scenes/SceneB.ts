@@ -43,9 +43,9 @@ export default class SceneB {
 		this.scene = new Scene;
 		this.animations = initAnimationsB();
 		this.parameters = {
-			index: 3, // DEBUG
+			index: 2, // DEBUG
 			oldTime: 0,
-			nextAnimation: 5 + 3, // DEBUG
+			nextAnimation: 5 + 2, // DEBUG
 			isOldTimeSet: false,
 			setAnime: [false, false, false, false, false, false, false, false, false, false],
 			setCam: [false, false, false, false, false, false, false, false, false, false],
@@ -157,6 +157,7 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
+					this.reset(); // DEBUG
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -174,7 +175,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					this.reset(); // DEBUG
 					models.cube.visible = false;
 					console.log('sphere');
 					this.scene.remove(models.dragonParticles);
@@ -188,7 +188,6 @@ export default class SceneB {
 					models.cube.lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
 					cubeInfiniAnimate.play();
 					this.scene.add(
-						models.cube, // DEBUG
 						this.ambientLight,
 						this.hemisphereLight,
 						models.dragonSphere
@@ -206,9 +205,9 @@ export default class SceneB {
 					console.log('dragon');
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
-					models.dragonUnBrokenNoSphere.rotation.set(-0.711, -0.64, 0.010);
+					models.dragonUnBrokenNoSphere.rotation.set(1.711, 2.64, 6.010);
 					models.dragonUnBrokenNoSphere.scale.set(2, 2, 2);
-					models.dragonUnBrokenNoSphere.position.x = -50
+					models.dragonUnBrokenNoSphere.position.set(-45.75, 30.58, 50.53);
 					models.dragonUnBrokenNoSphere.visible = true;
 					this.scene.add(models.dragonUnBrokenNoSphere);
 					this.parameters.oldTime = this.clock.getElapsedTime();
@@ -369,18 +368,19 @@ export default class SceneB {
 		this.models.backgroundShader.scale.set(15, 15, 0.413);
 		this.models.backgroundShader.rotation.set(0.825, -0.179, -0.052);
 
-		this.models.torus[0].position.set(0, 0, -50);
+		this.models.torus[0].position.set(0, 0, -20);
 		this.models.torus[0].rotation.x = Math.PI / 2;
-		this.models.torus[1].position.set(0, 0, -50);
+		this.models.torus[1].position.set(0, 0, -20);
 		this.models.torus[1].rotation.x = Math.PI / 2;
 
 		this.models.cube.visible = false;
 
 		/* - Models for reset - */
 		this.models.gate.scale.set(0.734, 1, 0.623);
-		this.models.gate.position.set(-50, 0, 0);
+		this.models.gate.position.set(20, -20, 30);
+		this.models.gate.rotation.set(6, 4.5, -0.5);
 
-		this.models.dragonSphere.position.set(-50, 0, 0)
+		this.models.dragonSphere.position.set(0, 0, 20)
 		this.models.dragonSphere.scale.set(0.04, 0.04, 0.04);
 		this.models.dragonSphere.geometry.center();
 		this.models.dragonSphere.geometry.computeBoundingBox();
@@ -388,12 +388,12 @@ export default class SceneB {
 		this.models.aureole[0].scale.set(10, 10, 7);
 		this.models.aureole[1].scale.set(12, 12, 7);
 		this.models.aureole[2].scale.set(15, 15, 7);
-		this.models.aureole[0].position.set(-50, 0, 0);
-		this.models.aureole[1].position.set(-50, 0, 0);
-		this.models.aureole[2].position.set(-50, 0, 0);
-		this.models.aureole[0].rotation.set(0, 0, 0);
-		this.models.aureole[1].rotation.set(0, 0, 0);
-		this.models.aureole[2].rotation.set(0, 0, 0);
+		this.models.aureole[0].position.set(-20, 0, 0);
+		this.models.aureole[1].position.set(-3, 30, 0);
+		this.models.aureole[2].position.set(-30, 10, -70);
+		this.models.aureole[0].rotation.set(0, -4, 0);
+		this.models.aureole[1].rotation.set(-7, 0, 0);
+		this.models.aureole[2].rotation.set(0, 0, 5);
 	}
 
 	public render(_, rtt: boolean, transition: Transition) {

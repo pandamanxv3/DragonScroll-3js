@@ -93,7 +93,7 @@ const scenes: { [key: string]: SceneA | SceneB } = {
 window.addEventListener('wheel', function () {
 	if (!transitionParams.waitScroll && transitionParams.needScroll) {
 		transitionParams.waitScroll = true;
-		this.setTimeout(() => {transitionParams.waitScroll = false}, 2000);
+		this.setTimeout(() => {transitionParams.waitScroll = false}, 100);
 		transitionParams.animation++;
 		transitionParams.needScroll = false;
 		if (transitionParams.animation > 14) {
@@ -137,7 +137,7 @@ let transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, trans
 const clock = new Clock();
 // DEBUG
 transitionParams.animate = false;
-transitionParams.animation = 7;
+transitionParams.animation = 6;
 transitionParams.animations_transiA = [true, true, true, false];
 transitionParams.needScroll = false;
 transitionParams.scrollForTransition = false;
