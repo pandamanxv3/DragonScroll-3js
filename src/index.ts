@@ -93,8 +93,9 @@ const scenes: { [key: string]: SceneA | SceneB } = {
 window.addEventListener('wheel', function () {
 	if (!transitionParams.waitScroll && transitionParams.needScroll) {
 		transitionParams.waitScroll = true;
-		this.setTimeout(() => {transitionParams.waitScroll = false}, 2000);
-		transitionParams.animation++;
+		setTimeout(() => { transitionParams.waitScroll = false }, 1000);
+		if (transitionParams.animation === 6) { transitionParams.animations_transiA[3] = true; setTimeout(() => transitionParams.animation++, 1100); }
+		else { transitionParams.animation++; }
 		transitionParams.needScroll = false;
 		if (transitionParams.animation > 14) {
 			transitionParams.resetAnimation();

@@ -1,3 +1,4 @@
+import { Points } from 'three';
 import { ThreeModels } from '../types'
 
 export function cloneThreeModels(models: ThreeModels): ThreeModels {
@@ -7,12 +8,16 @@ export function cloneThreeModels(models: ThreeModels): ThreeModels {
 		fontA1: models.fontA1,
 		fontA2: models.fontA2,
 		fontB: models.fontB,
-		fontParticules: models.fontParticules.clone(true),
+		fontParticules: (() => new Points(models.fontParticules.geometry.clone(), models.fontParticules.material))(),
 		cube: models.cube.clone(),
 		torus: models.torus.map((mesh) => mesh.clone()),
 		dragonUnBroken: models.dragonUnBroken.clone(),
 		dragonWireframe: models.dragonWireframe.clone(),
-		dragonParticles: models.dragonParticles.clone(true),
+		dragonParticles: (() => {
+			const particlues = new Points(models.dragonParticles.geometry.clone(), models.dragonParticles.material);
+			particlues.scale.set(0.1, 0.1, 0.1);
+			return particlues;
+		})(),
 		dragonSphere: models.dragonSphere.clone(),
 		rockA: models.rockA.clone(),
 		rockB: models.rockB.clone(),
@@ -28,6 +33,6 @@ export function cloneThreeModels(models: ThreeModels): ThreeModels {
 		textContainer: models.textContainer,
 		textTitle: models.textTitle,
 		textSubtitle: models.textSubtitle,
-		creditText : models.creditText,
+		creditText: models.creditText,
 	};
 }

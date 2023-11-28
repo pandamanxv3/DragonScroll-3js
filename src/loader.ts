@@ -502,7 +502,6 @@ export default async function Loader(): Promise<ThreeModels> {
 		}));
 		objects.dragonWireframe.scale.set(0.1, 0.1, 0.1);
 
-		particlesGeometry.setAttribute('position', new Float32BufferAttribute(positionDragon, 3));
 		const particles = new Points(particlesGeometry, particlesMaterial);
 		particles.scale.set(0.1, 0.1, 0.1);
 		objects.dragonParticles = particles;

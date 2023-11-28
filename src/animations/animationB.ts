@@ -432,7 +432,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 			}
 			return true;
 		},
-		galaxyAnimation: (time, setAnime, rectAreaLights, models, scene) => {
+		galaxyAnimation: (time, setAnime, ambientLight, rectAreaLights, models, scene) => {
 			let count = 0;
 			for (let i = 0; i < models.dragonParticles.geometry.attributes.position.array.length * 3; i += 3) {
 				coor.set(
@@ -457,7 +457,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 				} else if (time < 3) {
 					if (!setAnime[0]) {
 						rectAreaLights.forEach(({ light, helper }) => { scene.remove(light, helper) });
-						models.fontB.forEach((font) => { scene.remove(font) });
+						models.fontB.forEach((font) => { font.visible = false });
 						scene.remove(models.torus[0], models.torus[1]);
 						(scene.background as Color).copy(color.white);
 						(models.dragonWireframe.material as MeshStandardMaterial).color.copy(color.black);
@@ -511,12 +511,35 @@ export default function initAnimationsB(): AnimationFunctionB {
 						models.camera[1].rotation.set(0, 0, 0);
 						models.cube.position.set(0, 0, 0);
 						models.cube.rotation.set(0, 0, 0);
-						// gsap Font
+						models.fontB.forEach((font, index) => {
+							font.visible = true;
+							font.position.set(0, 0, -50 * (index % 2 + 1));
+							font.scale.set(0.07, 0.07, 0.07);
+							font.lookAt(0, 0, 0);
+						});
+						ambientLight.intensity = 0.1
+						gsap.to(models.fontB[0].position, { x: -0.1,  y: 0, z: -0.5, duration: 2 });
+						gsap.to(models.fontB[1].position, { x: -0.06, y: 0, z: -0.5, duration: 2 });
+						gsap.to(models.fontB[2].position, { x: -0.02, y: 0, z: -0.5, duration: 2 });
+						gsap.to(models.fontB[3].position, { x:  0.02, y: 0, z: -0.5, duration: 2 });
+						gsap.to(models.fontB[4].position, { x:  0.06, y: 0, z: -0.5, duration: 2 });
+						gsap.to(models.fontB[5].position, { x:  0.1,  y: 0, z: -0.5, duration: 2 });
 						setAnime[3] = true;
 					}
 					models.cube.position.z = (time * 12) % 10;
 					if (time < 15.15) { return true; }
-					else { return false; }
+					else {
+						if (setAnime[9]) {
+							gsap.to(models.fontB[0].position, { x: 0, y: 0, z: -25, duration: 1 });
+							gsap.to(models.fontB[1].position, { x: 0, y: 0, z: -25, duration: 1 });
+							gsap.to(models.fontB[2].position, { x: 0, y: 0, z: -25, duration: 1 });
+							gsap.to(models.fontB[3].position, { x: 0, y: 0, z: -25, duration: 1 });
+							gsap.to(models.fontB[4].position, { x: 0, y: 0, z: -25, duration: 1 });
+							gsap.to(models.fontB[5].position, { x: 0, y: 0, z: -25, duration: 1 });
+							setAnime[9] = false;
+						}
+						return false;
+					}
 				}
 				models.dragonParticles.geometry.attributes.position.array[i] = coor.x;
 				models.dragonParticles.geometry.attributes.position.array[i + 1] = coor.y;

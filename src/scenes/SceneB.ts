@@ -1,4 +1,4 @@
-import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, Vector3, Color, Clock, WebGLRenderer, ShaderMaterial, HemisphereLight } from 'three'
+import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, Vector3, Color, Clock, WebGLRenderer, ShaderMaterial, HemisphereLight, MeshStandardMaterial } from 'three'
 import { AnimationFunctionB, ThreeModels, Transition } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 import initAnimationsB from '../animations/animationB'
@@ -132,13 +132,13 @@ export default class SceneB {
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 
 					this.reactAreaLights.forEach(({ light, helper }) => {
-						helper.visible = false
-						this.scene.add(light, helper)
+						helper.visible = false;
+						this.scene.add(light, helper);
 					});
 					models.fontB.forEach((font) => {
-						font.lookAt(models.camera[1].position)
-						font.visible = false
-						this.scene.add(font)
+						font.lookAt(models.camera[1].position);
+						font.visible = false;
+						this.scene.add(font);
 					});
 					this.scene.add(
 						models.dragonWireframe,
@@ -158,18 +158,23 @@ export default class SceneB {
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
 					this.reset(); // DEBUG
+					models.fontB.forEach(font => { this.scene.add(font) }); // DEBUG ??
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					this.scene.add(
+						this.ambientLight,
 						models.dragonParticles,
-						models.cube
+						models.cube,
 					);
+
+					this.ambientLight.intensity = 0;
 					this.parameters.oldTime = this.clock.getElapsedTime();
 					this.parameters.isOldTimeSet = true;
 				}
-				if (!this.animations.galaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.reactAreaLights, models, this.scene)) {
+				if (!this.animations.galaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.ambientLight, this.reactAreaLights, models, this.scene)) {
 					transition.needScroll = true;
+					transition.animations_transiA[3] && (this.parameters.setAnime[9] = true);
 				}
 				this.animations.cameraGalaxyAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setCam, models.camera[1]);
 			},
@@ -186,12 +191,19 @@ export default class SceneB {
 					models.cube.lookAt(8.49699361604131276, -0.2164219053147923, -0.8403326154054094);
 					cubeInfiniAnimate.play();
 					this.scene.add(
-						this.ambientLight,
 						this.hemisphereLight,
-						models.dragonSphere
+						models.dragonSphere,
 					);
+					// models.fontB[0].position.set(-11.5, 6.99, 27.5);
+					// models.fontB[1].position.set(-11.115, 6.87, 27.45);
+					// models.fontB[2].position.set(-11.1, 6.875, 27.48);
+					// models.fontB[3].position.set(-11.07, 6.87, 27.5);
+					// models.fontB[4].position.set(-10.99, 6.855, 27.48);
+					// models.fontB[5].position.set(-10.98, 6.86, 27.5);
+					models.fontB.forEach((font) => {
+						font.lookAt(models.camera[1].position);
+					});
 					this.parameters.oldTime = this.clock.getElapsedTime();
-					models.cube.visible = true;
 					this.parameters.isOldTimeSet = true;
 				} else
 					if (!this.animations.resetSphereAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.ambientLight, this.hemisphereLight, models)) {
@@ -397,7 +409,7 @@ export default class SceneB {
 		const elapsedTime = this.clock.getElapsedTime();
 		this.animationFuncs[this.parameters.index](elapsedTime);
 		// console.log(transition.animation, this.parameters.nextAnimation)
-		if (transition.animation < 14 && transition.animation == this.parameters.nextAnimation) {
+		if (transition.animation < 14 && transition.animation === this.parameters.nextAnimation) {
 			this.parameters.next();
 		}
 		this.renderer.setClearColor('black');

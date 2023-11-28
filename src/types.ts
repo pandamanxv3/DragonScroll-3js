@@ -10,7 +10,7 @@ export type AnimationFunctionB = {
 	flashAnimation: (time: number, setAnime: boolean[], reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[], models: ThreeModels, scene: Scene) => boolean,
 	cameraAnimation: (event: MouseEvent, camera: PerspectiveCamera) => void,
 	cameraFlashAnimation: (time: number, setCam: boolean[], models: ThreeModels, funcListener: (event: MouseEvent) => void) => boolean,
-	galaxyAnimation: (time: number, setAnime: boolean[], reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[], models: ThreeModels, scene: Scene) => boolean,
+	galaxyAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[], models: ThreeModels, scene: Scene) => boolean,
 	cameraGalaxyAnimation: (time: number, setCam: boolean[], camera: PerspectiveCamera) => void,
 	resetSphereAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean,
 	resetDragonAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean,
