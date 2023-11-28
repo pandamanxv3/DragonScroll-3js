@@ -95,15 +95,24 @@ export default class SceneA {
 
 		/* - Font - */
 
+		const HandleAnimationEnd = () => {
+			this.models.textSubtitle.style.animation = 'blink 2s linear infinite';
+			this.models.textSubtitle.removeEventListener('animationend', HandleAnimationEnd);
+		}
 		// this.models.creditText.style.display = 'block';
 		this.models.textTitle.style.display = 'block';
-		this.models.textSubtitle.style.display = 'block';
-		this.models.creditText.style.display = 'block';
+		this.models.textTitle.style.visibility = 'visible';
 		this.models.textTitle.style.animation = 'fadeIn 1s forwards';
+		
+		this.models.creditText.style.display = 'block';
+		this.models.creditText.style.visibility = 'visible';
+		this.models.creditText.style.animation = 'fadeIn 3s forwards';
+
+		this.models.textSubtitle.style.display = 'block';
+		this.models.textSubtitle.style.visibility = 'visible';
 		this.models.textSubtitle.style.animation = 'fadeIn 3s forwards';
-		this.models.textSubtitle.addEventListener('animationend', () => {
-			this.models.textSubtitle.style.animation = 'blink 2s linear infinite';
-		});
+
+		this.models.textSubtitle.addEventListener('animationend', HandleAnimationEnd);
 
 
 	}
