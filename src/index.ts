@@ -5,6 +5,7 @@ import SceneB from './scenes/SceneB'
 import { ThreeModels, Transition as TransitionType } from './types'
 import TransitionClass from './utils/Transition'
 import { cloneThreeModels } from './utils/cloneThreeModels'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 /********************************************************************************/
 /* ----------------------------------- MODELS --------------------------------- */
@@ -94,7 +95,7 @@ window.addEventListener('wheel', function () {
 	if (!transitionParams.waitScroll && transitionParams.needScroll) {
 		transitionParams.waitScroll = true;
 		setTimeout(() => { transitionParams.waitScroll = false }, 500);
-		if (transitionParams.animation === 6) { transitionParams.animations_transiA[3] = true; setTimeout(() => transitionParams.animation++, 1100); }
+		if (transitionParams.animation === 6) { transitionParams.animations_transiA[3] = true; setTimeout(() => transitionParams.animation++, 1500); }
 		else { transitionParams.animation++; }
 		transitionParams.needScroll = false;
 		if (transitionParams.animation > 14) {
@@ -136,18 +137,6 @@ window.addEventListener('resize', () => {
 /********************************************************************************/
 let transition = new TransitionClass(scenes.sceneA, scenes.sceneB, models, transitionParams);
 const clock = new Clock();
-// DEBUG
-transitionParams.animate = false;
-transitionParams.animation = 6;
-transitionParams.animations_transiA = [true, true, true, false];
-transitionParams.needScroll = false;
-transitionParams.scrollForTransition = false;
-transitionParams.scrollPercentage = 0.02;
-transitionParams.timerParticules = 0.42179999998211887;
-transitionParams.timerWater = 0.8587999999821184;
-transitionParams.transition = 1;
-transitionParams.transitionBis = 0.8400000000000004;
-// ******************************
 function animate() {
 	transition.render(clock.getElapsedTime(), camera, scenes.sceneA, scenes.sceneB, renderer, models, transitionParams)
 	requestAnimationFrame(animate);

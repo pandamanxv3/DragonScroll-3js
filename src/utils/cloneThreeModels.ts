@@ -7,7 +7,7 @@ export function cloneThreeModels(models: ThreeModels): ThreeModels {
 		backgroundShader: models.backgroundShader,
 		fontA1: models.fontA1,
 		fontA2: models.fontA2,
-		fontB: models.fontB,
+		fontB: models.fontB.map(font => font.clone()),
 		fontParticules: (() => new Points(models.fontParticules.geometry.clone(), models.fontParticules.material))(),
 		cube: models.cube.clone(),
 		torus: models.torus.map((mesh) => mesh.clone()),

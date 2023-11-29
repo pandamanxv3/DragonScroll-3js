@@ -357,14 +357,6 @@ export default async function Loader(): Promise<ThreeModels> {
 		);
 
 		/* -------------------- Cube -------------------- */
-		// objects.cube = new Mesh(
-		// 	new BoxGeometry(4, 2.55, 200, 2, 1, 100),
-		// 	new MeshBasicMaterial({
-		// 		color: 0xff0000,
-		// 		wireframe: true,
-		// 		side: BackSide
-		// 	})
-		// );
 		const sideGeometry = new PlaneGeometry(1, 1, 1, 160);
 		const sideMaterial = new MeshBasicMaterial({
 			color: 0xff0000,

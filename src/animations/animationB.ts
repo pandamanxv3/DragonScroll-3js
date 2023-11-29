@@ -1,12 +1,10 @@
-import { Color, Euler, Material, MathUtils, Matrix4, MeshStandardMaterial, RectAreaLight, ShaderMaterial, Vector3 } from 'three';
+import { Color, Euler, MathUtils, MeshStandardMaterial, RectAreaLight, ShaderMaterial, Vector3 } from 'three';
 import { AnimationFunctionB } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import '../scenes/font.css'
 import gsap from 'gsap'
-import { on } from 'events';
-import { start } from 'repl';
-
-
+import { RoughEase, ExpoScaleEase } from "gsap/EasePack";
+gsap.registerPlugin(RoughEase, ExpoScaleEase);
 
 export default function initAnimationsB(): AnimationFunctionB {
 	let canMove: boolean = true;
@@ -553,7 +551,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 						move.toWoDampling(models.cube.position, models.camera[1].position, 0.00004);
 					}
 					if (time > 12.85) {
-						models.camera[1].far = 280 - 100 * (time - 12.85);
+						models.camera[1].far = 275 - 100 * (time - 12.85);
 						models.camera[1].updateProjectionMatrix();
 					}
 				} else {
@@ -570,24 +568,25 @@ export default function initAnimationsB(): AnimationFunctionB {
 							font.lookAt(0, 0, 0);
 						});
 						ambientLight.intensity = 0.1
-						gsap.to(models.fontB[0].position, { x: -0.1,  y: 0, z: -0.5, duration: 2 });
-						gsap.to(models.fontB[1].position, { x: -0.06, y: 0, z: -0.5, duration: 2 });
-						gsap.to(models.fontB[2].position, { x: -0.02, y: 0, z: -0.5, duration: 2 });
-						gsap.to(models.fontB[3].position, { x:  0.02, y: 0, z: -0.5, duration: 2 });
-						gsap.to(models.fontB[4].position, { x:  0.06, y: 0, z: -0.5, duration: 2 });
-						gsap.to(models.fontB[5].position, { x:  0.1,  y: 0, z: -0.5, duration: 2 });
+						gsap.to(models.fontB[0].position, { x: -0.1, z: -0.5, duration: 2, ease: "power3.out" });
+						gsap.to(models.fontB[1].position, { x: -0.06, z: -0.5, duration: 2, ease: "power3.out" });
+						gsap.to(models.fontB[2].position, { x: -0.02, z: -0.5, duration: 2, ease: "power3.out" });
+						gsap.to(models.fontB[3].position, { x: 0.02, z: -0.5, duration: 2, ease: "power3.out" });
+						gsap.to(models.fontB[4].position, { x: 0.06, z: -0.5, duration: 2, ease: "power3.out" });
+						gsap.to(models.fontB[5].position, { x: 0.1, z: -0.5, duration: 2, ease: "power3.out" });
+						models.fontB.forEach((font, index) => gsap.to(font.position, { y: 0.02, duration: 2, delay: 1 + index * 0.4, yoyo: true, repeat: -1 }));
 						setAnime[3] = true;
 					}
 					models.cube.position.z = (time * 12) % 10;
 					if (time < 15.15) { return true; }
 					else {
 						if (setAnime[9]) {
-							gsap.to(models.fontB[0].position, { x: 0, y: 0, z: -25, duration: 1 });
-							gsap.to(models.fontB[1].position, { x: 0, y: 0, z: -25, duration: 1 });
-							gsap.to(models.fontB[2].position, { x: 0, y: 0, z: -25, duration: 1 });
-							gsap.to(models.fontB[3].position, { x: 0, y: 0, z: -25, duration: 1 });
-							gsap.to(models.fontB[4].position, { x: 0, y: 0, z: -25, duration: 1 });
-							gsap.to(models.fontB[5].position, { x: 0, y: 0, z: -25, duration: 1 });
+							gsap.to(models.fontB[0].position, { x: 0, y: 0, z: -25, duration: 1, ease: "expoScale(0.5,7,none)" });
+							gsap.to(models.fontB[1].position, { x: 0, y: 0, z: -25, duration: 1, ease: "expoScale(0.5,7,none)" });
+							gsap.to(models.fontB[2].position, { x: 0, y: 0, z: -25, duration: 1, ease: "expoScale(0.5,7,none)" });
+							gsap.to(models.fontB[3].position, { x: 0, y: 0, z: -25, duration: 1, ease: "expoScale(0.5,7,none)" });
+							gsap.to(models.fontB[4].position, { x: 0, y: 0, z: -25, duration: 1, ease: "expoScale(0.5,7,none)" });
+							gsap.to(models.fontB[5].position, { x: 0, y: 0, z: -25, duration: 1, ease: "expoScale(0.5,7,none)" });
 							setAnime[9] = false;
 						}
 						return false;
@@ -625,6 +624,31 @@ export default function initAnimationsB(): AnimationFunctionB {
 			if (!setAnime[0]) {
 				ambientLight.intensity = 0;
 				hemisphereLight.intensity = 0.1;
+				gsap.to(models.camera[1].position, { x: -11.568, y: 7.179, z: 27.886, duration: 2, ease: "rough({template:elastic.out,strength:2,points:30,taper:none,randomize:true,clamp:false})", repeat: -1 })
+				models.fontB.forEach((font) => gsap.killTweensOf(font.position));
+				gsap.to(
+					models.cube.position,
+					{
+						x: -27.06, y: 12.65, z: 50,
+						// onUpdate: () => models.cube.lookAt(models.camera[1].position),
+						duration: 2,
+						repeat: -1,
+						ease: "none",
+					}
+				);
+				models.cube.lookAt(models.camera[1].position)
+				gsap.fromTo(models.fontB[0].position, { x: 29.306, y: -7.942, z: -29.659 }, { x: -12.726, y: 7.230, z: 29.186, duration: 2, delay: 1, ease: "slow(0.1,0.7,false)", repeat: -1, onUpdate: () => models.fontB[0].lookAt(models.camera[1].position) });
+				gsap.fromTo(models.fontB[1].position, { x: 29.306, y: -7.942, z: -29.659 }, { x: -12.410, y: 7.230, z: 29.313, duration: 2, delay: 1, ease: "slow(0.1,0.7,false)", repeat: -1, onUpdate: () => models.fontB[1].lookAt(models.camera[1].position) });
+				gsap.fromTo(models.fontB[2].position, { x: 29.306, y: -7.942, z: -29.659 }, { x: -12.096, y: 7.230, z: 29.436, duration: 2, delay: 1, ease: "slow(0.1,0.7,false)", repeat: -1, onUpdate: () => models.fontB[2].lookAt(models.camera[1].position) });
+				gsap.fromTo(models.fontB[3].position, { x: 29.306, y: -7.942, z: -29.659 }, { x: -11.789, y: 7.230, z: 29.568, duration: 2, delay: 1, ease: "slow(0.1,0.7,false)", repeat: -1, onUpdate: () => models.fontB[3].lookAt(models.camera[1].position) });
+				gsap.fromTo(models.fontB[4].position, { x: 29.306, y: -7.942, z: -29.659 }, { x: -11.481, y: 7.230, z: 29.711, duration: 2, delay: 1, ease: "slow(0.1,0.7,false)", repeat: -1, onUpdate: () => models.fontB[4].lookAt(models.camera[1].position) });
+				gsap.fromTo(models.fontB[5].position, { x: 29.306, y: -7.942, z: -29.659 }, { x: -11.149, y: 7.230, z: 29.816, duration: 2, delay: 1, ease: "slow(0.1,0.7,false)", repeat: -1, onUpdate: () => models.fontB[5].lookAt(models.camera[1].position) });
+				gsap.fromTo(models.fontB[0].scale, { x: 0.1, y: 0.1, z: 0.1 }, { x: 0.7, y: 0.7, z: 0.7, duration: 2, delay: 1, ease: "none", repeat: -1 });
+				gsap.fromTo(models.fontB[1].scale, { x: 0.1, y: 0.1, z: 0.1 }, { x: 0.7, y: 0.7, z: 0.7, duration: 2, delay: 1, ease: "none", repeat: -1 });
+				gsap.fromTo(models.fontB[2].scale, { x: 0.1, y: 0.1, z: 0.1 }, { x: 0.7, y: 0.7, z: 0.7, duration: 2, delay: 1, ease: "none", repeat: -1 });
+				gsap.fromTo(models.fontB[3].scale, { x: 0.1, y: 0.1, z: 0.1 }, { x: 0.7, y: 0.7, z: 0.7, duration: 2, delay: 1, ease: "none", repeat: -1 });
+				gsap.fromTo(models.fontB[4].scale, { x: 0.1, y: 0.1, z: 0.1 }, { x: 0.7, y: 0.7, z: 0.7, duration: 2, delay: 1, ease: "none", repeat: -1 });
+				gsap.fromTo(models.fontB[5].scale, { x: 0.1, y: 0.1, z: 0.1 }, { x: 0.7, y: 0.7, z: 0.7, duration: 2, delay: 1, ease: "none", repeat: -1 });
 				gsap.to(ambientLight, { intensity: 0.07, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.2, duration: 2, ease: "none" });
 				gsap.to(
@@ -644,6 +668,10 @@ export default function initAnimationsB(): AnimationFunctionB {
 			if (!setAnime[0]) {
 				gsap.to(ambientLight, { intensity: 0.14, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.3, duration: 2, ease: "none" });
+				gsap.to(models.fontB[3].rotation, {
+					x: models.fontB[3].rotation.x + 2 * Math.PI, y: models.fontB[3].rotation.y + 2 * Math.PI,
+					duration: 1, repeat: -1, ease: "none"
+				})
 				gsap.to(
 					models.dragonUnBrokenNoSphere.position,
 					{ x: -4.75, y: -0.58, z: -0.53, duration: 2, ease: "none" }
@@ -662,6 +690,8 @@ export default function initAnimationsB(): AnimationFunctionB {
 				startGlitchEffect(models.dragonSphere, 0.5, 0.4);
 				gsap.to(ambientLight, { intensity: 0.21, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.4, duration: 2, ease: "none" });
+				gsap.killTweensOf(models.camera[1].position);
+				gsap.to(models.camera[1].position, { x: -11.668, y: 7.079, z: 27.986, duration: 1.5, ease: "rough({template:elastic.out,strength:3,points:30,taper:none,randomize:true,clamp:false})", repeat: -1 })
 				gsap.to(
 					models.gate.position,
 					{ x: -0.39, y: 2.1, z: -1.42, duration: 2, ease: "none" }
@@ -684,6 +714,8 @@ export default function initAnimationsB(): AnimationFunctionB {
 				if (!setAnime[0]) {
 					gsap.to(ambientLight, { intensity: 0.28, duration: 2, ease: "none" });
 					gsap.to(hemisphereLight, { intensity: 0.5, duration: 2, ease: "none" });
+					gsap.fromTo(models.fontB[1].scale, { x: 0.7 }, { x: -1, y: 1, z: 1, duration: 0.5, repeat: -1 });
+					gsap.fromTo(models.fontB[4].scale, { y: 0.1 }, { y: 1, duration: 2, repeat: -1 });
 					gsap.to(
 						models.aureole[0].position,
 						{
@@ -711,6 +743,8 @@ export default function initAnimationsB(): AnimationFunctionB {
 					startGlitchEffect(models.dragonUnBrokenNoSphere, 0.1, 3, 3);
 					gsap.to(ambientLight, { intensity: 0.35, duration: 2, ease: "none" });
 					gsap.to(hemisphereLight, { intensity: 0.6, duration: 2, ease: "none" });
+					gsap.killTweensOf(models.camera[1].position);
+					gsap.to(models.camera[1].position, { x: -11.568, y: 7.179, z: 27.886, duration: 1, ease: "rough({template:elastic.out,strength:5,points:40,taper:none,randomize:true,clamp:false})", repeat: -1 })
 					gsap.to(
 						models.aureole[1].position,
 						{ x: 0, y: 0, z: -25, duration: 2, ease: "none" }
@@ -734,6 +768,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 				if (!setAnime[0]) {
 					gsap.to(ambientLight, { intensity: 0.42, duration: 2, ease: "none" });
 					gsap.to(hemisphereLight, { intensity: 0.7, duration: 2, ease: "none" });
+					gsap.to(models.fontB[5].rotation, { y: models.fontB[5].rotation.y + 8 * Math.PI, duration: 2, repeat: -1, ease: "bounce.out" });
 					gsap.to(
 						models.aureole[2].position,
 						{ x: 0, y: 0, z: -25, duration: 2, ease: "none" }
@@ -777,6 +812,25 @@ export default function initAnimationsB(): AnimationFunctionB {
 				startFadeOutProcess();
 				gsap.to(ambientLight, { intensity: 0.5, duration: 2, ease: "none" });
 				gsap.to(hemisphereLight, { intensity: 0.8, duration: 2, ease: "none" });
+				gsap.killTweensOf(models.camera[1].position);
+				gsap.to(models.camera[1].position, { x: -11.668, y: 7.079, z: 27.986, duration: 1, ease: "rough({template:elastic.out,strength:8,points:60,taper:none,randomize:true,clamp:false})", repeat: 3 })
+				gsap.killTweensOf(models.cube.position);
+				gsap.to(
+					models.cube.position,
+					{
+						x: -132, y: 50.5, z: 200,
+						onUpdate: () => models.cube.lookAt(models.camera[1].position),
+						duration: 6
+					}
+				);
+				models.fontB.forEach(font => {
+					gsap.killTweensOf(font.position);
+					gsap.killTweensOf(font.rotation);
+					gsap.killTweensOf(font.scale);
+					gsap.to(font.position, { x: (Math.random() - 0.5) * 100, y: (Math.random() - 0.5) * 100, z: (Math.random() - 0.5) * 100, duration: 3 });
+					gsap.to(font.rotation, { x: font.rotation.x + 6 * Math.PI, y: font.rotation.x + 4 * Math.PI, duration: 3 });
+					gsap.to(font.scale, { x: 1, y: 1, z: 1, duration: 3 });
+				});
 				setAnime[0] = true;
 			}
 
