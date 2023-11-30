@@ -3,16 +3,6 @@ import { AnimationFunctionA } from '../types'
 import gsap from 'gsap'
 import '../scenes/font.css'
 
-// const enum animations_name {
-//     rotation_aureole,
-//     water,
-//     water2,
-//     cube
-// };
-
-// let timer: number = 0;
-// let acceleration: number = 1;
-
 export default function initAnimationA(): AnimationFunctionA[] {
 	const enum animations_name {
 		rotation_aureole,

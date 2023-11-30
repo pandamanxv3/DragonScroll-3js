@@ -94,7 +94,6 @@ export default class SceneA {
 			this.models.textSubtitle.style.animation = 'blink 2s linear infinite';
 			this.models.textSubtitle.removeEventListener('animationend', HandleAnimationEnd);
 		}
-		// this.models.creditText.style.display = 'block';
 		this.models.textTitle.style.display = 'block';
 		this.models.textTitle.style.visibility = 'visible';
 		this.models.textTitle.style.animation = 'fadeIn 1s forwards';
@@ -113,7 +112,6 @@ export default class SceneA {
 	}
 
 	public render(delta: number, rtt: boolean, transition: Transition): void {
-		// renderer.setClearColor('#a7ccdb');
 		this.animations[transition.animation](delta, this.models, this.models.camera[0], this.scene, transition)
 		this.models.water[0].material.uniforms['time'].value = delta / 2;
 

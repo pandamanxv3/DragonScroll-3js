@@ -13,15 +13,11 @@ export default function initAnimationsB(): AnimationFunctionB {
 
 	function startGlitchEffect(obj, duration = 0.1, intensity = 0.1, delay = 0, rotation = true) {
 		console.log("startGlitchEffect");
-		// Sauvegarde des positions et rotations initiales
 		const initialPosition = obj.position.clone();
 		const initialRotation = obj.rotation.clone();
 
 		const glitch = () => {
-			// Réinitialise à la position et rotation initiales
-			//ICI!!!
 			obj.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
-			// Applique le glitch
 			gsap.to(obj.position, {
 				x: obj.position.x + Math.random() * intensity - intensity / 2,
 				y: obj.position.y + Math.random() * intensity - intensity / 2,
@@ -258,7 +254,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 		transitionAnimation: (time, models) => {
 			models.water[1].material.uniforms['time'].value = time / 2;
 			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
-			if (time < 0) {
+			if (time < 1) {
 				// models.camera[1].rotation.x += 0.05;
 				models.camera[1].position.y += 0.02;
 			}
@@ -270,17 +266,26 @@ export default function initAnimationsB(): AnimationFunctionB {
 			models.torus[0].rotation.z = time * 0.1;
 			models.torus[1].rotation.z = -time * 0.1;
 			if (time < 0) {
-
-				models.textTitle.style.animation = 'fadeIn 0.5s forwards';
-				models.textTitle.style.visibility = 'visible';
 				color.on(rectAreaLights[0], color.white, 0.1);
 				color.on(rectAreaLights[2], color.white, 0.1);
-				models.textTitle.style.animation = 'fadeOut 0.4s 2.9s forwards';
-				const handleAnimationEnd = () => {
+
+				models.textTitle.style.visibility = 'visible';
+				models.textTitle.style.animation = 'fadeIn 1s forwards';
+
+				const handleAnimationEnd2 = () => {
+					models.textTitle.style.animation = 'fadeOut 1s 1s forwards';
 					models.textTitle.style.visibility = 'hidden';
-					models.textTitle.removeEventListener('animationend', handleAnimationEnd);
+					models.textTitle.removeEventListener('animationend', handleAnimationEnd2);
 				}
+
+				const handleAnimationEnd = () => {
+					models.textTitle.style.animation = 'fadeOut 0.4s 2s forwards';
+					models.textTitle.removeEventListener('animationend', handleAnimationEnd);
+					models.textTitle.addEventListener('animationend', handleAnimationEnd2);
+				}
+
 				models.textTitle.addEventListener('animationend', handleAnimationEnd);
+
 			} else if (time < 3.5) {
 				color.off(rectAreaLights[0], color.white, 0.1);
 				color.off(rectAreaLights[2], color.white, 0.1);
@@ -630,7 +635,6 @@ export default function initAnimationsB(): AnimationFunctionB {
 					models.cube.position,
 					{
 						x: -27.06, y: 12.65, z: 50,
-						// onUpdate: () => models.cube.lookAt(models.camera[1].position),
 						duration: 2,
 						repeat: -1,
 						ease: "none",
