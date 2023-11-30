@@ -264,17 +264,26 @@ export default function initAnimationsB(): AnimationFunctionB {
 			models.torus[0].rotation.z = time * 0.1;
 			models.torus[1].rotation.z = -time * 0.1;
 			if (time < 0) {
-
-				models.textTitle.style.animation = 'fadeIn 0.5s forwards';
-				models.textTitle.style.visibility = 'visible';
 				color.on(rectAreaLights[0], color.white, 0.1);
 				color.on(rectAreaLights[2], color.white, 0.1);
-				models.textTitle.style.animation = 'fadeOut 0.4s 2.9s forwards';
-				const handleAnimationEnd = () => {
+
+				models.textTitle.style.visibility = 'visible';
+				models.textTitle.style.animation = 'fadeIn 1s forwards';
+
+				const handleAnimationEnd2 = () => {
+					models.textTitle.style.animation = 'fadeOut 1s 1s forwards';
 					models.textTitle.style.visibility = 'hidden';
-					models.textTitle.removeEventListener('animationend', handleAnimationEnd);
+					models.textTitle.removeEventListener('animationend', handleAnimationEnd2);
 				}
+
+				const handleAnimationEnd = () => {
+					models.textTitle.style.animation = 'fadeOut 0.4s 2s forwards';
+					models.textTitle.removeEventListener('animationend', handleAnimationEnd);
+					models.textTitle.addEventListener('animationend', handleAnimationEnd2);
+				}
+
 				models.textTitle.addEventListener('animationend', handleAnimationEnd);
+
 			} else if (time < 3.5) {
 				color.off(rectAreaLights[0], color.white, 0.1);
 				color.off(rectAreaLights[2], color.white, 0.1);
