@@ -3,16 +3,6 @@ import { AnimationFunctionA } from '../types'
 import gsap from 'gsap'
 import '../scenes/font.css'
 
-// const enum animations_name {
-//     rotation_aureole,
-//     water,
-//     water2,
-//     cube
-// };
-
-// let timer: number = 0;
-// let acceleration: number = 1;
-
 export default function initAnimationA(): AnimationFunctionA[] {
 	const enum animations_name {
 		rotation_aureole,
@@ -207,7 +197,7 @@ export default function initAnimationA(): AnimationFunctionA[] {
 				duration: 3,
 				ease: 'expo.out'
 			})
-			gsap.to(models.gate.position, { //-0.39, 2.1, -1.42
+			gsap.to(models.gate.position, {
 				y: 40,
 				z: 2,
 				duration: 3,
@@ -216,16 +206,15 @@ export default function initAnimationA(): AnimationFunctionA[] {
 			})
 		}
 		if (timer + 0.41 < elapsedTime && transition.animations_transiA[animations_name.water2] == false) {
-			// models.gate.visible = false
-			models.aureole[0].visible = false
-			models.aureole[1].visible = false
-			models.aureole[2].visible = false
-			models.dragonSphere.visible = false
-			models.fontA1.visible = true //particules liee a ca, les delier
-			transition.animations_transiA[animations_name.water2] = true
+			models.aureole[0].visible = false;
+			models.aureole[1].visible = false;
+			models.aureole[2].visible = false;
+			models.dragonSphere.visible = false;
+			models.fontA1.visible = true;
+			transition.animations_transiA[animations_name.water2] = true;
 		}
-		if (timer + 3 < elapsedTime) // a retirer
-			transition.needScroll = true
+		if (timer + 3 < elapsedTime)
+			transition.needScroll = true;
 
 	}
 	animations[3] = (elapsedTime, models, camera, scene, transition) => {
@@ -249,7 +238,7 @@ export default function initAnimationA(): AnimationFunctionA[] {
 			models.cube.rotation.set(0, 0, 0);
 			models.cube.visible = true;
 			transition.animations_transiA[animations_name.cube] = true;
-			transition.needScroll = true; // a changer
+			transition.needScroll = true;
 		}
 		models.cube.position.z = (elapsedTime * 12) % 10;
 	}

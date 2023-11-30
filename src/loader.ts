@@ -22,10 +22,7 @@ dracoLoader.setDecoderPath('draco/');
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
 
-// Font loader
-const fontLoader = new FontLoader();
-
-async function importFileAsString(path) {
+async function importFileAsString(path: any) {
 	const response: Response = await fetch(path);
 	const text: string = await response.text();
 	return text;
@@ -103,7 +100,7 @@ const fontBasicMaterial = new MeshBasicMaterial({ color: 0xff0000 });
 /* ----------------------------------- FONT ----------------------------------- */
 /********************************************************************************/
 
-function loadFont(fontPath) {
+function loadFont(fontPath: any) {
 	const fontLoader = new FontLoader();
 	return new Promise((resolve, reject) => {
 		fontLoader.load(fontPath, resolve, undefined, reject);
@@ -113,21 +110,6 @@ function loadFont(fontPath) {
 /********************************************************************************/
 /* ----------------------------------- OBJECT --------------------------------- */
 /********************************************************************************/
-const objectsPath = [
-	'mesh/dragon/Sphere.glb',
-	'mesh/aureole/aureole.glb',
-	'mesh/dragon/Unbroken.glb',
-	'mesh/gate/tori_low.glb',
-	'mesh/dragon/Dragon_OneMesh_Body.glb',
-];
-
-const objectsName = [
-	'dragonSphere',
-	'aureole',
-	'dragonUnbroken',
-	'gate',
-	'dragonUnBrokenNoSphere'
-];
 
 const aureoleScale = [
 	{ x: 0.8, y: 0.7, z: 0.8 },
@@ -146,7 +128,7 @@ const aureolePosition = [
 /* -------------------------------------------------------------------------- */
 
 export default async function Loader(): Promise<ThreeModels> {
-	let positions = []; // TMP - type
+	let positions: number[] = [];
 	const objects: Partial<ThreeModels> = {
 		camera: [],
 		water: [],
@@ -382,7 +364,7 @@ export default async function Loader(): Promise<ThreeModels> {
 
 		/* -------------------- Models -------------------- */
 
-		const objectsData = {
+		const objectsData: { [key: string]: string } = {
 			'dragonSphere': 'mesh/dragon/Sphere.glb',
 			'aureole': 'mesh/aureole/aureole.glb',
 			'dragonUnbroken': 'mesh/dragon/Unbroken.glb',
@@ -390,8 +372,8 @@ export default async function Loader(): Promise<ThreeModels> {
 			'dragonUnBrokenNoSphere': 'mesh/dragon/Dragon_OneMesh_Body.glb',
 		};
 
-		const modelDragon: BufferGeometry[] = []
-		let positionDragon = []
+		const modelDragon: BufferGeometry[] = [];
+		let positionDragon: number[] = [];
 
 		for (let objectsName in objectsData) {
 			const gltf = await gltfLoader.loadAsync(objectsData[objectsName]);

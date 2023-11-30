@@ -1,4 +1,4 @@
-import { Color, Euler, MathUtils, MeshStandardMaterial, RectAreaLight, ShaderMaterial, Vector3 } from 'three';
+import { Color, Euler, Group, MathUtils, Mesh, MeshStandardMaterial, RectAreaLight, ShaderMaterial, Vector3 } from 'three';
 import { AnimationFunctionB } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import '../scenes/font.css'
@@ -11,17 +11,12 @@ export default function initAnimationsB(): AnimationFunctionB {
 	const coor = new Vector3(0, 0, 0);
 	const direction = new Vector3(0, 0, 0);
 
-	function startGlitchEffect(obj, duration = 0.1, intensity = 0.1, delay = 0, rotation = true) {
-		console.log("startGlitchEffect");
-		// Sauvegarde des positions et rotations initiales
+	function startGlitchEffect(obj: Mesh | Group, duration = 0.1, intensity = 0.1, delay = 0, rotation = true) {
 		const initialPosition = obj.position.clone();
 		const initialRotation = obj.rotation.clone();
 
 		const glitch = () => {
-			// Réinitialise à la position et rotation initiales
-			//ICI!!!
 			obj.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
-			// Applique le glitch
 			gsap.to(obj.position, {
 				x: obj.position.x + Math.random() * intensity - intensity / 2,
 				y: obj.position.y + Math.random() * intensity - intensity / 2,
@@ -49,7 +44,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 			}
 		};
 
-		glitch(); // Démarre l'effet
+		glitch();
 	}
 
 	function stopGlitchEffect(obj) {
@@ -258,8 +253,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 		transitionAnimation: (time, models) => {
 			models.water[1].material.uniforms['time'].value = time / 2;
 			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
-			if (time < 0) {
-				// models.camera[1].rotation.x += 0.05;
+			if (time < 1) {
 				models.camera[1].position.y += 0.02;
 			}
 			else return false;
@@ -630,7 +624,6 @@ export default function initAnimationsB(): AnimationFunctionB {
 					models.cube.position,
 					{
 						x: -27.06, y: 12.65, z: 50,
-						// onUpdate: () => models.cube.lookAt(models.camera[1].position),
 						duration: 2,
 						repeat: -1,
 						ease: "none",
@@ -787,13 +780,11 @@ export default function initAnimationsB(): AnimationFunctionB {
 			function triggerFadeOut() {
 				const overlay = document.getElementById('fade-overlay');
 				if (overlay) {
-					overlay.style.opacity = '1'; // Commence le fondu
+					overlay.style.opacity = '1';
 
-					// Tu peux ajouter un délai ici avant de changer de scène ou de réinitialiser l'opacité
 					setTimeout(() => {
-						// Réinitialiser l'opacité pour une utilisation ultérieure, ou naviguer vers une nouvelle scène
 						overlay.style.opacity = '0';
-					}, 2500); // Assure-toi que ce délai correspond à la durée de la transition CSS
+					}, 2500);
 				}
 			}
 
@@ -804,8 +795,8 @@ export default function initAnimationsB(): AnimationFunctionB {
 				stopGlitchEffect(models.aureole[0]);
 			}
 			function startFadeOutProcess() {
-				setTimeout(triggerFadeOut, 1000); // Déclenche triggerFadeOut après 2 secondes
-				setTimeout(stopGlitchEffectHandler, 1000); // Déclenche stopGlitchEffect après 2 secondes
+				setTimeout(triggerFadeOut, 1000);
+				setTimeout(stopGlitchEffectHandler, 1000);
 			}
 
 			if (!setAnime[0]) {

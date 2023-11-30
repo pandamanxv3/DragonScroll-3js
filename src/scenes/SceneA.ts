@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, AmbientLight, HemisphereLight, WebGLRenderTarget, HalfFloatType, WebGLRenderer, Color } from 'three';
+import { Scene, AmbientLight, HemisphereLight, WebGLRenderTarget, HalfFloatType, WebGLRenderer} from 'three';
 import { AnimationFunctionA, ThreeModels, Transition } from '../types';
 import initAnimationsA from '../animations/animationA';
 import './font.css';
@@ -22,8 +22,6 @@ export default class SceneA {
 		this.renderer = renderer;
 		this.fbo = new WebGLRenderTarget(window.innerWidth, window.innerHeight, { type: HalfFloatType });
 
-		// this.textTitle.style.fontWeight = '500';
-
 		this.scene.add(
 			models.gate,
 			models.dragonUnBrokenNoSphere,
@@ -37,7 +35,6 @@ export default class SceneA {
 			this.hemisphereLight,
 			models.fontA1
 		);
-
 		this.reset();
 	}
 
@@ -94,7 +91,6 @@ export default class SceneA {
 			this.models.textSubtitle.style.animation = 'blink 2s linear infinite';
 			this.models.textSubtitle.removeEventListener('animationend', HandleAnimationEnd);
 		}
-		// this.models.creditText.style.display = 'block';
 		this.models.textTitle.style.display = 'block';
 		this.models.textTitle.style.visibility = 'visible';
 		this.models.textTitle.style.animation = 'fadeIn 1s forwards';
@@ -113,7 +109,6 @@ export default class SceneA {
 	}
 
 	public render(delta: number, rtt: boolean, transition: Transition): void {
-		// renderer.setClearColor('#a7ccdb');
 		this.animations[transition.animation](delta, this.models, this.models.camera[0], this.scene, transition)
 		this.models.water[0].material.uniforms['time'].value = delta / 2;
 

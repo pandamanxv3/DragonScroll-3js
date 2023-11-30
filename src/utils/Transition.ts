@@ -21,25 +21,18 @@ export default class Transition {
 	}
 	  
 	public render(delta: number, camera: OrthographicCamera, sceneA: SceneA | SceneB, sceneB: SceneA | SceneB, renderer: WebGLRenderer, models: ThreeModels, transition: TransitionType) {
-		// Transition animation
-
 		if (transition.animate) {
-			//generate une nouvelle image avec les images de la scene A et B
 			if (transition.sceneWeAt == 0) {
 				transition.transition = Math.max(Math.min(transition.transitionBis + (Math.cos(delta * 1) - 1) * 0.1, 1), 0);
 			}
-			// if (transition.sceneWeAt == 1) {
 			update();
-			// }
 		}
 		(models.planeShader.material as ShaderMaterial).uniforms.mixRatio.value = transition.transition;
-		// Prevent render both scenes when it's not necessary
 		if (transition.transition == 0) {
 			sceneA.render(delta, false, transition);
 		} else if (transition.transition == 1) {
 			sceneB.render(delta, false, transition);
 		} else {
-			// When 0<transition<1 render transition between two scenes
 			sceneA.render(delta, true, transition);
 			sceneB.render(delta, true, transition);
 

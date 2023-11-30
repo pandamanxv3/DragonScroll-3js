@@ -1,4 +1,4 @@
-import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, Vector3, Color, Clock, WebGLRenderer, ShaderMaterial, HemisphereLight, MeshStandardMaterial } from 'three'
+import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, Vector3, Color, Clock, WebGLRenderer, HemisphereLight } from 'three'
 import { AnimationFunctionB, ThreeModels, Transition } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 import initAnimationsB from '../animations/animationB'
@@ -145,7 +145,7 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					models.fontB.forEach(font => { this.scene.add(font) }); // DEBUG ??
+					models.fontB.forEach(font => { this.scene.add(font) });
 					window.removeEventListener('mousemove', cameraListener);
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -167,7 +167,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					console.log('sphere');
 					this.scene.remove(models.dragonParticles);
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
@@ -189,7 +188,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					console.log('dragon');
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					models.dragonUnBrokenNoSphere.rotation.set(-0.711, -0.64, 0.010);
@@ -206,7 +204,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					console.log('gate');
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					this.scene.add(models.gate);
@@ -219,7 +216,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					console.log('aureole0');
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					this.scene.add(models.aureole[0]);
@@ -232,7 +228,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					console.log('aureole1');
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					this.scene.add(models.aureole[1]);
@@ -245,7 +240,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					console.log('aureole2');
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					this.scene.add(models.aureole[2]);
@@ -258,7 +252,6 @@ export default class SceneB {
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {
-					console.log('water');
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 					models.water[0].rotation.x = -Math.PI / 2;
@@ -376,7 +369,6 @@ export default class SceneB {
 	public render(_, rtt: boolean, transition: Transition) {
 		const elapsedTime = this.clock.getElapsedTime();
 		this.animationFuncs[this.parameters.index](elapsedTime);
-		// console.log(transition.animation, this.parameters.nextAnimation)
 		if (transition.animation < 14 && transition.animation === this.parameters.nextAnimation) {
 			this.parameters.next();
 		}

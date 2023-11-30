@@ -1,4 +1,4 @@
-import { AmbientLight, Group, HemisphereLight, Mesh, PerspectiveCamera, Points, RectAreaLight, Scene, Texture, WebGLRenderer } from 'three'
+import { AmbientLight, Group, HemisphereLight, Mesh, PerspectiveCamera, Points, RectAreaLight, Scene, Texture } from 'three'
 import { Water } from 'three/examples/jsm/objects/Water.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import { Tween } from 'three/examples/jsm/libs/tween.module'
@@ -28,15 +28,9 @@ export type ThreeModels = {
 	cube: Group,
 	torus: Mesh[],
 	fontParticules: Points,
-	// dragonUnBroken: Mesh,
 	dragonWireframe: Mesh,
 	dragonParticles: Points,
 	dragonSphere: Mesh,
-	// rockA: Mesh,
-	// rockB: Mesh,
-	// rockC: Mesh,
-	// RockD: Mesh,
-	// dragonBroken: Mesh,
 	dragonUnBrokenNoSphere: Group,
 	planeShader: Mesh,
 	gate: Mesh,
