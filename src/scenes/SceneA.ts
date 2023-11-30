@@ -12,12 +12,8 @@ export default class SceneA {
 	private animations: AnimationFunctionA[];
 	private models: ThreeModels;
 	private renderer: WebGLRenderer;
-	private textHTML: HTMLElement[];
-	private textContainer: HTMLElement;
-	private textTitle: HTMLElement;
-	private textSubtitle: HTMLElement;
 
-	constructor(models: ThreeModels, renderer: WebGLRenderer) {  // TMP - Debug
+	constructor(models: ThreeModels, renderer: WebGLRenderer) {
 		this.ambientLight = new AmbientLight(0xfff0dd, 0.5);
 		this.hemisphereLight = new HemisphereLight(0xebdab7, 0x39305c, 0.8);
 		this.scene = new Scene;
@@ -25,7 +21,6 @@ export default class SceneA {
 		this.models = models;
 		this.renderer = renderer;
 		this.fbo = new WebGLRenderTarget(window.innerWidth, window.innerHeight, { type: HalfFloatType });
-
 
 		// this.textTitle.style.fontWeight = '500';
 

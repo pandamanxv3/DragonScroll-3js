@@ -2,7 +2,6 @@ import { Scene, AmbientLight, WebGLRenderTarget, HalfFloatType, RectAreaLight, V
 import { AnimationFunctionB, ThreeModels, Transition } from '../types'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 import initAnimationsB from '../animations/animationB'
-import gsap from 'gsap';
 
 
 export default class SceneB {

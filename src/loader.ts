@@ -41,8 +41,8 @@ const textures: { [key: string]: { normalMap: Texture } } = {}
 textures.dragonUnbroken = { normalMap: textureLoader.load("textures/dragon/unbroken/Normal.png") };
 textures.dragonUnbroken.normalMap.flipY = false;
 
-textures.dragonBroken = { normalMap: textureLoader.load("/textures/dragon/broken/Normal.png") };
-textures.dragonBroken.normalMap.flipY = false;
+textures.dragonSphere = { normalMap: textureLoader.load("/textures/dragon/broken/Normal.png") };
+textures.dragonSphere.normalMap.flipY = false;
 
 textures.aureole = { normalMap: textureLoader.load("textures/aureole/Normal.png") };
 textures.aureole.normalMap.flipY = false;
@@ -70,12 +70,12 @@ materials.dragonUnbroken = new MeshStandardMaterial({
 	normalMap: textures.dragonUnbroken.normalMap
 });
 
-materials.dragonBroken = new MeshStandardMaterial({
+materials.dragonSphere = new MeshStandardMaterial({
 	map: map,
 	aoMap: aoMap,
 	color: "#eafae8", // Remplacez 0xRRGGBB par la valeur hexadécimale de la couleur souhaitée
 	roughnessMap: roughnessMap,
-	normalMap: textures.dragonBroken.normalMap,
+	normalMap: textures.dragonSphere.normalMap,
 	displacementMap: displacementMap,
 	displacementScale: 10
 });
@@ -114,32 +114,16 @@ function loadFont(fontPath) {
 /* ----------------------------------- OBJECT --------------------------------- */
 /********************************************************************************/
 const objectsPath = [
-	'mesh/dragon/Center.glb',
-	'mesh/dragon/Down.glb',
 	'mesh/dragon/Sphere.glb',
-	'mesh/dragon/Up.glb',
 	'mesh/aureole/aureole.glb',
-	'mesh/aureole/RockA.glb',
-	'mesh/aureole/RockB.glb',
-	'mesh/aureole/RockC.glb',
-	'mesh/aureole/RockD.glb',
-	'mesh/dragon/Broken.glb',
 	'mesh/dragon/Unbroken.glb',
 	'mesh/gate/tori_low.glb',
 	'mesh/dragon/Dragon_OneMesh_Body.glb',
 ];
 
 const objectsName = [
-	'dragonCenter',
-	'dragonDown',
 	'dragonSphere',
-	'dragonUp',
 	'aureole',
-	'rockA',
-	'rockB',
-	'rockC',
-	'rockD',
-	'dragonBroken',
 	'dragonUnbroken',
 	'gate',
 	'dragonUnBrokenNoSphere'
@@ -399,16 +383,8 @@ export default async function Loader(): Promise<ThreeModels> {
 		/* -------------------- Models -------------------- */
 
 		const objectsData = {
-			'dragonCenter': 'mesh/dragon/Center.glb',
-			'dragonDown': 'mesh/dragon/Down.glb',
 			'dragonSphere': 'mesh/dragon/Sphere.glb',
-			'dragonUp': 'mesh/dragon/Up.glb',
 			'aureole': 'mesh/aureole/aureole.glb',
-			'rockA': 'mesh/aureole/RockA.glb',
-			'rockB': 'mesh/aureole/RockB.glb',
-			'rockC': 'mesh/aureole/RockC.glb',
-			'rockD': 'mesh/aureole/RockD.glb',
-			'dragonBroken': 'mesh/dragon/Broken.glb',
 			'dragonUnbroken': 'mesh/dragon/Unbroken.glb',
 			'gate': 'mesh/gate/tori_low.glb',
 			'dragonUnBrokenNoSphere': 'mesh/dragon/Dragon_OneMesh_Body.glb',
@@ -426,12 +402,11 @@ export default async function Loader(): Promise<ThreeModels> {
 					const geometry: BufferGeometry = n.geometry.clone();
 					geometry.applyMatrix4(n.matrixWorld);
 					modelDragon.push(geometry);
-				} if (objectsName == 'dragonUnBrokenNoSphere') {
+				}
+				if (objectsName == 'dragonUnBrokenNoSphere') {
 					positions = positions.concat(Array.from(n.geometry.attributes.position.array));
 					n.material = materials.dragonUnbroken;
 					objects.dragonUnBrokenNoSphere?.add(gltf.scene);
-				} else if (objectsName == 'dragonBroken' || objectsName == 'dragonDown' || objectsName == 'dragonUp' || objectsName == 'dragonCenter') {
-					n.material = materials.dragonBroken;
 				} else if (objectsName == 'aureole') {
 					n.material = materials.aureole;
 					for (let j = 0; j < 6; j++) {
@@ -447,27 +422,20 @@ export default async function Loader(): Promise<ThreeModels> {
 				} else if (objectsName == 'gate') {
 					n.material = materials.gate;
 				} else if (objectsName == 'dragonSphere') {
-					n.material = materials.dragonBroken;
-				} else {
-					n.material = materials.aureole;
+					n.material = materials.dragonSphere;
 				}
 
 				if (objectsName == 'dragonSphere') { objects.dragonSphere = n }
-				else if (objectsName == 'rockA') { objects.rockA = n }
-				else if (objectsName == 'rockB') { objects.rockB = n }
-				else if (objectsName == 'rockC') { objects.rockC = n }
-				else if (objectsName == 'rockD') { objects.RockD = n }
-				else if (objectsName == 'dragonBroken') { objects.dragonBroken = n }
 				else if (objectsName == 'gate') { objects.gate = n }
 			})
 		}
 
 		
-		objects.dragonUnBroken = new Mesh(mergeGeometries(modelDragon, false), materials.dragonUnbroken.clone());
-		objects.dragonUnBroken.scale.set(0.1, 0.1, 0.1);
-		(objects.dragonUnBroken.material as MeshStandardMaterial).wireframe = true;
+		const dragonUnBroken = new Mesh(mergeGeometries(modelDragon, false), materials.dragonUnbroken.clone());
+		dragonUnBroken.scale.set(0.1, 0.1, 0.1);
+		(dragonUnBroken.material as MeshStandardMaterial).wireframe = true;
 		
-		objects.dragonWireframe = new Mesh(objects.dragonUnBroken.geometry, new MeshBasicMaterial({
+		objects.dragonWireframe = new Mesh(dragonUnBroken.geometry, new MeshBasicMaterial({
 			color: 0x00000,
 			wireframe: true
 		}));
@@ -483,16 +451,6 @@ export default async function Loader(): Promise<ThreeModels> {
 			size: 0.2,
 			sizeAttenuation: true
 		});
-
-		objects.dragonUnBroken = new Mesh(mergeGeometries(modelDragon, false), materials.dragonUnbroken.clone());
-		objects.dragonUnBroken.scale.set(0.1, 0.1, 0.1);
-		(objects.dragonUnBroken.material as MeshStandardMaterial).wireframe = true
-
-		objects.dragonWireframe = new Mesh(objects.dragonUnBroken.geometry, new MeshBasicMaterial({
-			color: 0x00000,
-			wireframe: true
-		}));
-		objects.dragonWireframe.scale.set(0.1, 0.1, 0.1);
 
 		const particles = new Points(particlesGeometry, particlesMaterial);
 		particles.scale.set(0.1, 0.1, 0.1);
@@ -523,12 +481,6 @@ export default async function Loader(): Promise<ThreeModels> {
 		objects.creditText.style.borderRadius = '5px';
 		objects.creditText.style.color = "#a84728";
 		objects.creditText.style.fontFamily = 'pixel, sans-serif';
-		// objects.creditText.style.transform = 'translate(20%, 10%)';
-		// objects.creditText.style.borderRadius = '5px';
-		// objects.creditText.style.color = '#ffffff';
-		// objects.creditText.style.fontFamily = 'pixel, sans-serif';
-		// objects.creditText.style.fontSize = '15em';
-
 
 		return objects as ThreeModels;
 	} catch (error) {
