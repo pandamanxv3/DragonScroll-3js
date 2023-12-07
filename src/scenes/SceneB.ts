@@ -89,33 +89,19 @@ export default class SceneB {
 					this.parameters.oldTime = this.clock.getElapsedTime();
 					this.parameters.isOldTimeSet = true;
 				}
-
-				if (!this.animations.waterAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.ambientLight, models, transition) && !this.parameters.setAnime[9]) {
-					this.parameters.setAnime[9] = true;
-					transition.needScroll = true;
-				}
+				
+				this.animations.waterAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setAnime, this.ambientLight, models, transition)
 			},
 			(elapsedTime) => {
-				if (!this.tmp && !this.parameters.isOldTimeSet) {
-					this.parameters.oldTime = this.clock.getElapsedTime();
-					this.parameters.isOldTimeSet = true;
-				}
-				if (!this.tmp) {
-					if (!this.animations.transitionAnimation(elapsedTime - this.parameters.oldTime, this.models)) {
-						this.parameters.isOldTimeSet = false;
-						this.tmp = true;
-					}
-					return;
-				}
 				if (!this.parameters.isOldTimeSet) {
-					this.scene.remove(
-						this.ambientLight,
-						models.dragonUnBrokenNoSphere,
-						models.fontParticules,
-						models.fontA2,
-						models.backgroundShader,
-						models.water[1]
-					);
+					// this.scene.remove(
+					// 	this.ambientLight,
+					// 	models.dragonUnBrokenNoSphere,
+					// 	models.fontParticules,
+					// 	models.fontA2,
+					// 	models.backgroundShader,
+					// 	models.water[1]
+					// );
 					this.parameters.setAnime = Array(this.parameters.setAnime.length).fill(false);
 					this.parameters.setCam = Array(this.parameters.setCam.length).fill(false);
 
@@ -128,11 +114,11 @@ export default class SceneB {
 						font.visible = false;
 						this.scene.add(font);
 					});
-					this.scene.add(
-						models.dragonWireframe,
-						models.torus[0],
-						models.torus[1]
-					);
+					// this.scene.add(
+					// 	models.dragonWireframe,
+					// 	models.torus[0],
+					// 	models.torus[1]
+					// );
 					this.parameters.oldTime = this.clock.getElapsedTime();
 					this.parameters.isOldTimeSet = true;
 				}
@@ -141,7 +127,7 @@ export default class SceneB {
 					this.parameters.setAnime[9] = true;
 					transition.needScroll = true;
 				}
-				this.animations.cameraFlashAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setCam, models, cameraListener);
+				this.animations.cameraFlashAnimation(elapsedTime - this.parameters.oldTime, this.parameters.setCam, this.ambientLight, this.scene, models, cameraListener);
 			},
 			(elapsedTime) => {
 				if (!this.parameters.isOldTimeSet) {

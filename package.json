@@ -20,7 +20,7 @@
     "vite-plugin-glsl": "^1.1.2"
   },
   "dependencies": {
-    "gsap": "^3.12.2",
+    "gsap": "^3.12.3",
     "three": "^0.158.0",
     "three-bmfont-text": "^2.3.0"
   }

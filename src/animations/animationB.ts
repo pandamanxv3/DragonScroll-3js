@@ -1,9 +1,9 @@
-import { Color, Euler, Group, MathUtils, Mesh, MeshStandardMaterial, RectAreaLight, ShaderMaterial, Vector3 } from 'three';
+import { Color, Euler, Group, MathUtils, Mesh, MeshStandardMaterial, RectAreaLight, ShaderMaterial, Vector3 } from 'three'
 import { AnimationFunctionB } from '../types'
-import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
 import '../scenes/font.css'
 import gsap from 'gsap'
-import { RoughEase, ExpoScaleEase } from "gsap/EasePack";
+import { RoughEase, ExpoScaleEase } from 'gsap/EasePack'
 gsap.registerPlugin(RoughEase, ExpoScaleEase);
 
 export default function initAnimationsB(): AnimationFunctionB {
@@ -47,7 +47,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 		glitch();
 	}
 
-	function stopGlitchEffect(obj) {
+	function stopGlitchEffect(obj: Mesh | Group) {
 		gsap.killTweensOf(obj.position);
 		gsap.killTweensOf(obj.rotation);
 	}
@@ -163,149 +163,160 @@ export default function initAnimationsB(): AnimationFunctionB {
 		waterAnimation: (time, setAnime, ambientLight, models, transiParameters) => {
 			models.water[1].material.uniforms['time'].value = time / 2;
 			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
-			if (transiParameters.transition > 0.4 && !setAnime[6]) {
-				if (!setAnime[5]) {
-					transiParameters.timerParticules = time;
-					setAnime[5] = true;
-				}
-				for (let i = 0; i < models.fontParticules.geometry.attributes.position.array.length * 3; i += 3) {
-					coor.set(
-						models.fontParticules.geometry.attributes.position.array[i],
-						models.fontParticules.geometry.attributes.position.array[i + 1],
-						models.fontParticules.geometry.attributes.position.array[i + 2]
-					);
-					coor.x = models.fontParticules.geometry.attributes.position.array[i] + time * 0.03 * (3 * (Math.random() - 0.1));
-					coor.y = models.fontParticules.geometry.attributes.position.array[i + 1] - time * 0.02 * (1.5 * (Math.random() - 0.1));
-					coor.z = models.fontParticules.geometry.attributes.position.array[i + 2] + time * 0.01 * (4.5 * Math.random() - 0.5);
-					models.fontParticules.geometry.attributes.position.array[i] = coor.x;
-					models.fontParticules.geometry.attributes.position.array[i + 1] = coor.y;
-					models.fontParticules.geometry.attributes.position.array[i + 2] = coor.z;
-				}
-				if (time - transiParameters.timerParticules > 1.5) {
-					setAnime[6] = true;
-				}
-				models.fontParticules.geometry.attributes.position.needsUpdate = true;
+
+			if (!setAnime[0] && transiParameters.transition > 0.4) {
+				setAnime[0] = true;
+				gsap.to({}, {
+					duration: 2,
+					onStart: () => { transiParameters.timerParticules = time },
+					onUpdate: () => {
+						for (let i = 0; i < models.fontParticules.geometry.attributes.position.array.length * 3; i += 3) {
+							coor.set(
+								models.fontParticules.geometry.attributes.position.array[i],
+								models.fontParticules.geometry.attributes.position.array[i + 1],
+								models.fontParticules.geometry.attributes.position.array[i + 2]
+							);
+							coor.x = models.fontParticules.geometry.attributes.position.array[i] + time * 0.03 * (3 * (Math.random() - 0.1));
+							coor.y = models.fontParticules.geometry.attributes.position.array[i + 1] - time * 0.02 * (1.5 * (Math.random() - 0.1));
+							coor.z = models.fontParticules.geometry.attributes.position.array[i + 2] + time * 0.01 * (4.5 * Math.random() - 0.5);
+							models.fontParticules.geometry.attributes.position.array[i] = coor.x;
+							models.fontParticules.geometry.attributes.position.array[i + 1] = coor.y;
+							models.fontParticules.geometry.attributes.position.array[i + 2] = coor.z;
+							models.fontParticules.geometry.attributes.position.needsUpdate = true;
+						}
+					}
+				});
 			}
 
-			if (transiParameters.transition == 1) {
-				if (!setAnime[7]) {
-					setAnime[7] = true;
-					transiParameters.timerWater = time;
-				}
-				if (transiParameters.timerWater > 0) {
-
-					if (time - transiParameters.timerWater < 1.2) {
-						ambientLight.intensity = 0.5 - (time - transiParameters.timerWater - 1) * 0.5;
-					} else if (time - transiParameters.timerWater < 2.1) {
-						ambientLight.intensity = 0.5 - (time - transiParameters.timerWater - 1.2) * 0.5;
-					} else if (time - transiParameters.timerWater < 3.2) {
-						if (!setAnime[0]) {
+			if (!setAnime[1] && transiParameters.transition === 1) {
+				setAnime[1] = true;
+				transiParameters.timerWater = time;
+				if (!setAnime[2] && transiParameters.timerWater > 0 && time - transiParameters.timerWater < 1.2) {
+					setAnime[2] = true;
+					gsap.to({}, {
+						onUpdate: () => { ambientLight.intensity = 0.5 - (time - transiParameters.timerWater - 1) * 0.5 },
+						duration: 1.2
+					});
+					gsap.to({}, {
+						onUpdate: () => { ambientLight.intensity = 0.5 - (time - transiParameters.timerWater - 1.2) * 0.5 },
+						delay: 1.2,
+						duration: 0.9
+					});
+					gsap.to({}, {
+						onStart: () => {
 							move.end.set(0.414, 0.414, 0);
 							move.end2.set(23, -21.2, 42.7);
-							setAnime[0] = true;
-						}
-						move.to(models.camera[1].rotation, move.end, 0.03);
-						move.to(models.camera[1].position, move.end2, 0.03);
-					} else if (time - transiParameters.timerWater < 5.5) {
-						if (!setAnime[1]) {
+						},
+						onUpdate: () => {
+							move.to(models.camera[1].rotation, move.end, 0.03);
+							move.to(models.camera[1].position, move.end2, 0.03);
+						},
+						delay: 2.1,
+						duration: 1.1
+					});
+					gsap.to({}, {
+						onStart: () => {
 							move.end.set(-10.553, -7.455, -3.367);
 							move.end2.set(1.354, 3.885, 1.71);
-							setAnime[1] = true;
-						}
-						move.to(models.backgroundShader.position, move.end, 0.05);
-						move.to(models.backgroundShader.rotation, move.end2, 0.05);
-					} else if (time - transiParameters.timerWater < 8) {
-						if (!setAnime[2]) {
+						},
+						onUpdate: () => {
+							move.to(models.backgroundShader.position, move.end, 0.05);
+							move.to(models.backgroundShader.rotation, move.end2, 0.05);
+						},
+						delay: 3.2,
+						duration: 2.3
+					});
+					gsap.to({}, {
+						onStart: () => {
 							models.dragonUnBrokenNoSphere.visible = false;
 							models.fontA2.visible = true;
 							move.end.set(-5.28, 0.988, -4.912);
 							move.end2.set(3.964, 2.224, -0.576);
 							move.end3.set(3.3, 27.9, 27.9);
 							move.end4.set((5.878 - Math.PI * 2), 0.259, 2.962);
-							setAnime[2] = true;
-						}
-						move.to(models.backgroundShader.position, move.end, 0.02);
-						move.to(models.backgroundShader.rotation, move.end2, 0.02);
-						move.to(models.camera[1].position, move.end3, 0.04);
-						move.to(models.camera[1].rotation, move.end4, 0.04);
-					} else if (time - transiParameters.timerWater < 10) {
-						if (!setAnime[3]) {
+						},
+						onUpdate: () => {
+							move.to(models.backgroundShader.position, move.end, 0.02);
+							move.to(models.backgroundShader.rotation, move.end2, 0.02);
+							move.to(models.camera[1].position, move.end3, 0.04);
+							move.to(models.camera[1].rotation, move.end4, 0.04);
+						},
+						delay: 5.5,
+						duration: 2.5
+					});
+					gsap.to({}, {
+						onStart: () => {
 							move.end.set(4.381, 21.4, 20);
-							setAnime[3] = true;
-						}
-						move.to(models.fontA2.position, move.end, 0.02);
-					} else {
-						if (!setAnime[4]) {
+						},
+						onUpdate: () => {
+							move.to(models.fontA2.position, move.end, 0.02);
+						},
+						delay: 8,
+						duration: 2
+					});
+					gsap.to(models.fontA2.position, {
+						onStart: () => {
 							move.end.set(models.fontA2.position.x, models.fontA2.position.y, models.fontA2.position.z);
 							move.end2.set(models.fontA2.rotation.x, models.fontA2.rotation.y, models.fontA2.rotation.z);
-							setAnime[4] = true;
-						}
-
-						models.fontA2.position.y = move.end.y + (Math.cos(time * 2) * 0.1);
-						models.fontA2.rotation.x = move.end2.x + (Math.cos(time * 2) * 0.2);
-						models.fontA2.rotation.y = move.end2.y + (Math.sin(time * 2) * 0.1);
-						return false;
-					}
+							transiParameters.needScroll = true;
+						},
+						onUpdate: () => {
+							const time =  Date.now() / 1000;
+							models.fontA2.position.y = move.end.y + (Math.cos(time * 2) * 0.1);
+							models.fontA2.rotation.x = move.end2.x + (Math.cos(time * 2) * 0.2);
+							models.fontA2.rotation.y = move.end2.y + (Math.sin(time * 2) * 0.1);
+						},
+						delay: 10,
+						duration: 2,
+						repeat: -1
+					});
 				}
 			}
-			return true;
-		},
-		transitionAnimation: (time, models) => {
-			models.water[1].material.uniforms['time'].value = time / 2;
-			(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
-			if (time < 1) {
-				models.camera[1].position.y += 0.02;
-			}
-			else return false;
-			return true;
 		},
 		flashAnimation: (time, setAnime, rectAreaLights, models, scene) => {
-
-			models.torus[0].rotation.z = time * 0.1;
-			models.torus[1].rotation.z = -time * 0.1;
-			if (time < 0) {
-				color.on(rectAreaLights[0], color.white, 0.1);
-				color.on(rectAreaLights[2], color.white, 0.1);
-
-				models.textTitle.style.visibility = 'visible';
-				models.textTitle.style.animation = 'fadeIn 1s forwards';
-
-				const handleAnimationEnd2 = () => {
-					models.textTitle.style.animation = 'fadeOut 1s 1s forwards';
-					models.textTitle.style.visibility = 'hidden';
-					models.textTitle.removeEventListener('animationend', handleAnimationEnd2);
-				}
-
-				const handleAnimationEnd = () => {
-					models.textTitle.style.animation = 'fadeOut 0.4s 2s forwards';
-					models.textTitle.removeEventListener('animationend', handleAnimationEnd);
-					models.textTitle.addEventListener('animationend', handleAnimationEnd2);
-				}
-
-				models.textTitle.addEventListener('animationend', handleAnimationEnd);
-
-			} else if (time < 3.5) {
-				color.off(rectAreaLights[0], color.white, 0.1);
-				color.off(rectAreaLights[2], color.white, 0.1);
-				color.on(rectAreaLights[4], color.white, 0.05);
-				if (time > 3.1) {
-					if (!setAnime[0]) {
+			if (!setAnime[0]) {
+				setAnime[0] = true;
+				gsap.to({}, {
+					onStart: () => {
+						color.on(rectAreaLights[0], color.white, 0.1);
+						color.on(rectAreaLights[2], color.white, 0.1);
+						models.textTitle.style.visibility = 'visible';
+						models.textTitle.style.animation = 'fadeIn 1s forwards';
+						const handleAnimationEnd2 = () => {
+							models.textTitle.style.animation = 'fadeOut 1s 1s forwards';
+							models.textTitle.style.visibility = 'hidden';
+							models.textTitle.removeEventListener('animationend', handleAnimationEnd2);
+						}
+						const handleAnimationEnd = () => {
+							models.textTitle.style.animation = 'fadeOut 0.4s 2s forwards';
+							models.textTitle.removeEventListener('animationend', handleAnimationEnd);
+							models.textTitle.addEventListener('animationend', handleAnimationEnd2);
+						}
+						models.textTitle.addEventListener('animationend', handleAnimationEnd);
+					},
+					onUpdate: () => {
+						color.off(rectAreaLights[0], color.white, 0.1);
+						color.off(rectAreaLights[2], color.white, 0.1);
+						color.on(rectAreaLights[4], color.white, 0.05);
+					},
+					delay: 1,
+					duration: 3.1,
+				});
+				gsap.to({}, {
+					onStart: () => {
 						(models.dragonWireframe.material as MeshStandardMaterial).color.copy(color.black);
-						setAnime[0] = true;
-					}
-					if (Math.random() < 0.8) {
-						if (!setAnime[1]) {
+					},
+					onUpdate: () => {
+						const value = Math.random();
+						if (value < 0.8) {
 							(scene.background as Color).copy(color.red);
 							rectAreaLights[7].helper.visible = true;
-							setAnime[1] = true;
-						}
-						color.on(rectAreaLights[0], color.white, time);
-						color.on(rectAreaLights[3], color.white, time);
-						color.on(rectAreaLights[4], color.white, time);
-						color.on(rectAreaLights[6], color.white, time);
-						color.on(rectAreaLights[7], color.white, time);
-					} else {
-						if (!setAnime[2]) {
+							color.on(rectAreaLights[0], color.white, time);
+							color.on(rectAreaLights[3], color.white, time);
+							color.on(rectAreaLights[4], color.white, time);
+							color.on(rectAreaLights[6], color.white, time);
+							color.on(rectAreaLights[7], color.white, time);
+						} else {
 							(scene.background as Color).copy(color.white);
 							color.setOff(rectAreaLights[0]);
 							rectAreaLights[0].helper.visible = true;
@@ -317,89 +328,115 @@ export default function initAnimationsB(): AnimationFunctionB {
 							rectAreaLights[6].helper.visible = true;
 							color.setOff(rectAreaLights[7]);
 							rectAreaLights[7].helper.visible = true;
-							setAnime[2] = true;
 						}
-					}
-				}
-			} else if (time < 4) {
-				if (!setAnime[3]) {
-
-					(scene.background as Color).copy(color.black);
-					(models.torus[0].material as MeshStandardMaterial).color = color.cyan;
-					(models.torus[1].material as MeshStandardMaterial).color = color.purple;
-					(models.dragonWireframe.material as MeshStandardMaterial).color.copy(color.white);
-					color.setOff(rectAreaLights[0]);
-					color.setOff(rectAreaLights[3]);
-					color.setOff(rectAreaLights[4]);
-					color.setOff(rectAreaLights[6]);
-					color.setOff(rectAreaLights[7]);
-					setAnime[3] = true;
-				}
-				color.on(rectAreaLights[8], color.white, 0.08);
-				if (Math.random() < 0.5) { color.setOn(rectAreaLights[5], color.white, time); }
-				else { color.setOff(rectAreaLights[5]); }
-				rectAreaLights[5].light.rotation.z += 0.025;
-			} else if (color.off(rectAreaLights[8], color.white, 0.1) && time < 4.5) {
-				if (!setAnime[4]) {
-					color.setOff(rectAreaLights[5]);
-					setAnime[4] = true;
-				}
-			} else if (time < 5) {
-				if (!setAnime[5]) {
-					color.setOn(rectAreaLights[1], color.white, 8);
-					color.setOn(rectAreaLights[5], color.white, 8);
-					color.setOn(rectAreaLights[7], color.white, 8);
-					setAnime[5] = true;
-				}
-			} else if (time < 6.5) {
-				if (time < 5.5) { color.setOff(rectAreaLights[1]); }
-				else if (time < 6) { color.setOff(rectAreaLights[5]); }
-				else {
-					color.setOff(rectAreaLights[7]);
-					color.gradient((models.torus[0].material as MeshStandardMaterial).color, time, 2, 0);
-					color.gradient((models.torus[1].material as MeshStandardMaterial).color, time, 5, 1);
-				}
-			} else if (time < 8.5) {
-				if (!setAnime[6]) {
-					rectAreaLights[1].light.position.set(-150, 100, 0);
-					rectAreaLights[1].light.lookAt(100, 0, 0);
-					rectAreaLights[5].light.position.set(0, 150, -100);
-					rectAreaLights[5].light.lookAt(0, 0, 0);
-					rectAreaLights[7].light.position.set(0, -100, -100);
-					rectAreaLights[7].light.lookAt(0, 0, 0);
-					setAnime[6] = true;
-				}
-				if (time < 7.5) {
-					if (!setAnime[7]) {
+					},
+					delay: 4.1,
+					duration: 0.4,
+				});
+				gsap.to({}, {
+					onStart: () => {
+						(scene.background as Color).copy(color.black);
+						(models.torus[0].material as MeshStandardMaterial).color = color.cyan;
+						(models.torus[1].material as MeshStandardMaterial).color = color.purple;
+						(models.dragonWireframe.material as MeshStandardMaterial).color.copy(color.white);
+						color.setOff(rectAreaLights[0]);
+						color.setOff(rectAreaLights[3]);
+						color.setOff(rectAreaLights[4]);
+						color.setOff(rectAreaLights[6]);
+						color.setOff(rectAreaLights[7]);
+					},
+					onUpdate: () => {
+						color.on(rectAreaLights[8], color.white, 0.08);
+						const value = Math.random();
+						if (value < 0.5) { color.setOn(rectAreaLights[5], color.white, time); }
+						else { color.setOff(rectAreaLights[5]); }
+						rectAreaLights[5].light.rotation.z += 0.025;
+					},
+					delay: 4.5,
+					duration: 0.5
+				});
+				gsap.to({}, {
+					onStart: () => { color.setOff(rectAreaLights[5]); },
+					onUpdate: () => { color.off(rectAreaLights[8], color.white, 0.1) },
+					onCompler: () => {
+						color.setOn(rectAreaLights[1], color.white, 8);
+						color.setOn(rectAreaLights[5], color.white, 8);
+						color.setOn(rectAreaLights[7], color.white, 8);
+					},
+					delay: 5,
+					duration: 0.5
+				});
+				gsap.to({}, {
+					onStart: () => {
+						color.setOff(rectAreaLights[1]);
+					},
+					onComplete: () => {
+						rectAreaLights[1].light.position.set(-150, 100, 0);
+						rectAreaLights[1].light.lookAt(100, 0, 0);
+						rectAreaLights[5].light.position.set(0, 150, -100);
+						rectAreaLights[5].light.lookAt(0, 0, 0);
+						rectAreaLights[7].light.position.set(0, -100, -100);
+						rectAreaLights[7].light.lookAt(0, 0, 0);
+					},
+					delay: 6,
+					duration: 0.5
+				});
+				gsap.to({}, {
+					onStart: () => { color.setOff(rectAreaLights[5]) },
+					onComplete: () => {
+						color.setOff(rectAreaLights[7]);
+						color.gradient((models.torus[0].material as MeshStandardMaterial).color, time, 2, 0);
+						color.gradient((models.torus[1].material as MeshStandardMaterial).color, time, 5, 1);
+					},
+					delay: 6.5,
+					duration: 0.5
+				});
+				gsap.to({}, {
+					onStart: () => {
+						rectAreaLights[1].light.position.set(-150, 100, 0);
+						rectAreaLights[1].light.lookAt(100, 0, 0);
+						rectAreaLights[5].light.position.set(0, 150, -100);
+						rectAreaLights[5].light.lookAt(0, 0, 0);
+						rectAreaLights[7].light.position.set(0, -100, -100);
+						rectAreaLights[7].light.lookAt(0, 0, 0);
 						models.fontB[0].visible = true;
 						models.fontB[1].visible = true;
 						models.fontB[2].visible = true;
 						models.fontB[4].visible = true;
-						setAnime[7] = true;
-					}
-					color.gradient((models.torus[0].material as MeshStandardMaterial).color, time, 2, 0);
-					color.gradient((models.torus[1].material as MeshStandardMaterial).color, time, 5, 1);
-					color.on(rectAreaLights[3], color.white, 0.05);
-					color.on(rectAreaLights[4], color.white, 0.05);
-					color.on(rectAreaLights[6], color.white, 0.05);
-				} else {
-					if (!setAnime[8]) {
+					},
+					onUpdate: () => {
+						color.gradient((models.torus[0].material as MeshStandardMaterial).color, time, 2, 0);
+						color.gradient((models.torus[1].material as MeshStandardMaterial).color, time, 5, 1);
+						color.on(rectAreaLights[3], color.white, 0.03);
+						color.on(rectAreaLights[4], color.white, 0.03);
+						color.on(rectAreaLights[6], color.white, 0.03);
+					},
+					delay: 7.5,
+					duration: 1
+				});
+				gsap.to({}, {
+					onStart: () => {
 						models.fontB[3].visible = true;
 						models.fontB[5].visible = true;
-						setAnime[8] = true;
-					}
-					color.gradient((models.torus[0].material as MeshStandardMaterial).color, time, 2, 0);
-					color.gradient((models.torus[1].material as MeshStandardMaterial).color, time, 5, 1);
-					color.on(rectAreaLights[1], color.white, 0.05);
-					color.on(rectAreaLights[7], color.white, 0.05);
-					color.on(rectAreaLights[5], color.white, 0.05);
-				}
-			} else {
-
+					},
+					onUpdate: () => {
+						color.gradient((models.torus[0].material as MeshStandardMaterial).color, time, 2, 0);
+						color.gradient((models.torus[1].material as MeshStandardMaterial).color, time, 5, 1);
+						color.on(rectAreaLights[1], color.white, 0.03);
+						color.on(rectAreaLights[7], color.white, 0.03);
+						color.on(rectAreaLights[5], color.white, 0.03);
+					},
+					delay: 8.5,
+					duration: 1
+				});
+			}
+			if (time > 9.5) {
 				color.gradient((models.torus[0].material as MeshStandardMaterial).color, time, 2, 0);
 				color.gradient((models.torus[1].material as MeshStandardMaterial).color, time, 5, 1);
 				return false;
 			}
+			models.torus[0].rotation.z = time * 0.1;
+			models.torus[1].rotation.z = -time * 0.1;
 			color.all(rectAreaLights, (models.dragonWireframe.material as MeshStandardMaterial).color);
 			return true;
 		},
@@ -413,19 +450,49 @@ export default function initAnimationsB(): AnimationFunctionB {
 			camera.rotation.y = -cursor.x;
 			canMove = true;
 		},
-		cameraFlashAnimation: (time, setCam, models, funcListener) => {
+		cameraFlashAnimation: (time, setCam, ambientLight, scene, models, funcListener) => {
 			let damping = 0.01;
-			if (time < 1.6) {
+			if (time < 2.6) {
 				if (!setCam[0]) {
-					(models.torus[0].material as MeshStandardMaterial).color = color.dark_grey;
-					(models.torus[1].material as MeshStandardMaterial).color = color.dark_blue;
-					models.camera[1].position.set(-67, 65, -50);
-					models.camera[1].rotation.set(-0.4, -1, -0.35);
-					move.end.set(-67, 77, -50);
+					gsap.to(models.camera[1].position, {
+						y: 29,
+						onUpdate: () => {
+							models.water[1].material.uniforms['time'].value = time / 2;
+							(models.backgroundShader.material as ShaderMaterial).uniforms.u_time.value = time;
+						},
+						onComplete: () => {
+							scene.remove(
+								ambientLight,
+								models.dragonUnBrokenNoSphere,
+								models.fontParticules,
+								models.fontA2,
+								models.backgroundShader,
+								models.water[1]
+							);
+							scene.add(
+								models.dragonWireframe,
+								models.torus[0],
+								models.torus[1]
+							);
+
+							(models.torus[0].material as MeshStandardMaterial).color = color.dark_grey;
+							(models.torus[1].material as MeshStandardMaterial).color = color.dark_blue;
+							models.camera[1].position.set(-67, 65, -50);
+							models.camera[1].rotation.set(-0.4, -1, -0.35);
+							move.end.set(-67, 77, -50);
+						},
+						duration: 1,
+						ease: 'none'
+					});
+					// (models.torus[0].material as MeshStandardMaterial).color = color.dark_grey;
+					// (models.torus[1].material as MeshStandardMaterial).color = color.dark_blue;
+					// models.camera[1].position.set(-67, 65, -50);
+					// models.camera[1].rotation.set(-0.4, -1, -0.35);
+					// move.end.set(-67, 77, -50);
 					setCam[0] = true;
 				}
-				move.to(models.camera[1].position, move.end, damping);
-			} else if (time < 3.1) {
+				if (time > 1) move.to(models.camera[1].position, move.end, damping);
+			} else if (time < 4.1) {
 				if (!setCam[1]) {
 					(models.torus[0].material as MeshStandardMaterial).color = color.green_blue;
 					(models.torus[1].material as MeshStandardMaterial).color = color.orange;
@@ -433,28 +500,28 @@ export default function initAnimationsB(): AnimationFunctionB {
 					models.camera[1].rotation.set(-1.8, -1.35, -1.88);
 					setCam[1] = true;
 				}
-			} else if (time < 3.2) {
+			} else if (time < 4.2) {
 				if (!setCam[2]) {
 					models.camera[1].rotation.set(6, 0.8, 0.55);
 					setCam[2] = true;
 				}
-			} else if (time < 3.3) {
+			} else if (time < 4.3) {
 				if (!setCam[3]) {
 					models.camera[1].rotation.set(0, 0.2, 5.7);
 					setCam[3] = true;
 				}
-			} else if (time < 3.4) {
+			} else if (time < 4.4) {
 				if (!setCam[4]) {
 					models.camera[1].rotation.set(6.3, 6, 0.4);
 					setCam[4] = true;
 				}
-			} else if (time < 3.5) {
+			} else if (time < 4.5) {
 				if (!setCam[5]) {
 					models.camera[1].position.set(-45, -6, 16);
 					models.camera[1].rotation.set(0.4, 5.0, 0.3);
 					setCam[5] = true;
 				}
-			} else if (time < 6) {
+			} else if (time < 7) {
 				if (!setCam[6]) {
 					models.camera[1].position.set(6, -10, -4);
 					move.end.set(26, -44, -14);
@@ -464,7 +531,7 @@ export default function initAnimationsB(): AnimationFunctionB {
 				}
 				models.camera[1].rotation.z += 0.005;
 				move.to(models.camera[1].position, move.end, damping);
-			} else if (time < 9) {
+			} else if (time < 10) {
 				if (!setCam[7]) {
 					models.camera[1].position.set(0, 0, 75);
 					models.camera[1].rotation.set(0, 0, 0);
@@ -506,7 +573,6 @@ export default function initAnimationsB(): AnimationFunctionB {
 					color.off(rectAreaLights[5], color.white, 0.1);
 					color.off(rectAreaLights[6], color.white, 0.1);
 					color.off(rectAreaLights[7], color.white, 0.1);
-					return true
 				} else if (time < 3) {
 					if (!setAnime[0]) {
 						rectAreaLights.forEach(({ light, helper }) => { scene.remove(light, helper) });

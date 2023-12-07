@@ -5,11 +5,10 @@ import { Tween } from 'three/examples/jsm/libs/tween.module'
 
 export type AnimationFunctionA = (elapsedTime: number, models: ThreeModels, camera: PerspectiveCamera, scene: Scene, transition: Transition) => void;
 export type AnimationFunctionB = {
-	waterAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, models: ThreeModels, transition: Transition) => boolean,
-	transitionAnimation: (time: number, models: ThreeModels) => boolean,
+	waterAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, models: ThreeModels, transition: Transition) => void,
 	flashAnimation: (time: number, setAnime: boolean[], reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[], models: ThreeModels, scene: Scene) => boolean,
 	cameraAnimation: (event: MouseEvent, camera: PerspectiveCamera) => void,
-	cameraFlashAnimation: (time: number, setCam: boolean[], models: ThreeModels, funcListener: (event: MouseEvent) => void) => boolean,
+	cameraFlashAnimation: (time: number, setCam: boolean[], ambientLight: AmbientLight, scene: Scene, models: ThreeModels, funcListener: (event: MouseEvent) => void) => boolean,
 	galaxyAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, reactAreaLights: { light: RectAreaLight, helper: RectAreaLightHelper }[], models: ThreeModels, scene: Scene) => boolean,
 	cameraGalaxyAnimation: (time: number, setCam: boolean[], camera: PerspectiveCamera) => void,
 	resetSphereAnimation: (time: number, setAnime: boolean[], ambientLight: AmbientLight, hemisphereLight: HemisphereLight, models: ThreeModels) => boolean,
